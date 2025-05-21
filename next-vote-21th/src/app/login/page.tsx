@@ -7,12 +7,17 @@ import { useState } from "react";
 import InputField from "@/components/login/InputField";
 
 const LoginPage = () => {
+  const [form, setForm] = useState({
+    id: "",
+    password: "",
+  });
+
   const [idError, setIdError] = useState("");
   const [pwError, setPwError] = useState("");
 
   const handleLogin = () => {
-    const isIdValid = false;
-    const isPwValid = false;
+    const isIdValid = form.id === "admin"; // 예시
+    const isPwValid = form.password === "1234"; // 예시
 
     setIdError(isIdValid ? "" : "존재하지 않는 아이디입니다.");
     setPwError(isPwValid ? "" : "비밀번호가 일치하지 않습니다.");
@@ -30,12 +35,16 @@ const LoginPage = () => {
             <InputField
               label="아이디"
               placeholder="아이디를 입력해주세요."
+              value={form.id}
+              onChange={e => setForm({ ...form, id: e.target.value })}
               error={idError}
             />
             <InputField
               label="비밀번호"
               type="password"
               placeholder="비밀번호를 입력해주세요."
+              value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
               error={pwError}
             />
           </div>
