@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  /* Main Colors */
+  --color-green: #30dc86;
+  --color-green-light: #ccffe6;
+  --color-green-dark: #167546;
+
+  /* Secondary Colors */
+  --color-violet: #a568ff;
+  --color-violet-light: #f0e5ff;
+  --color-violet-pressed: #8041de;
+  --color-violet-dark: #6224bf;
+
+  /* Grayscale */
+  --color-gray-0: #f8faff;
+  --color-gray-100: #f4f6fb;
+  --color-gray-200: #e9ecf3;
+  --color-gray-300: #dbdee8;
+  --color-gray-400: #c8ccd7;
+  --color-gray-500: #b1b5c0;
+  --color-gray-600: #9498a2;
+  --color-gray-700: #71747c;
+  --color-gray-800: #484a4f;
+  --color-gray-900: #1e1f21;
+
+  /* Base Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Semantic Colors */
+  --color-red: #ff585b;
+  --color-red-light: #ffebeb;
+
+  /* breakpoint */
+  --breakpoint-md: 768px;
+}
+
+@layer utilities {
+  /* Heading */
+  .text-heading1 {
+    @apply text-[1.375rem] leading-[135%] font-extrabold tracking-[-0.02em]; /* 22px */
+  }
+  .text-heading2 {
+    @apply text-[1.25rem] leading-[135%] font-bold tracking-[-0.02em]; /* 20px */
+  }
+  .text-heading3 {
+    @apply text-[1.125rem] leading-[135%] font-bold tracking-[-0.02em]; /* 18px */
+  }
+
+  /* Body */
+  .text-body1-sb {
+    @apply text-[1rem] leading-[135%] font-semibold tracking-[-0.02em]; /* 16px */
+  }
+  .text-body1-med {
+    @apply text-[1rem] leading-[135%] font-medium tracking-[-0.02em]; /* 16px */
+  }
+  .text-body2-med {
+    @apply text-[0.875rem] leading-[150%] font-medium tracking-[-0.02em]; /* 14px */
+  }
+
+  /* Label */
+  .text-lab1-b {
+    @apply text-[0.875rem] leading-[135%] font-bold tracking-[-0.02em]; /* 14px */
+  }
+  .text-lab1-sb {
+    @apply text-[0.875rem] leading-[135%] font-semibold tracking-[-0.02em]; /* 14px */
+  }
+
+  /* Caption */
+  .text-cap1-b {
+    @apply text-[0.75rem] leading-[135%] font-bold tracking-[-0.02em]; /* 12px */
+  }
+  .text-cap1-med {
+    @apply text-[0.75rem] leading-[135%] font-medium tracking-[-0.02em]; /* 12px */
+  }
+
+  /* scrollbar hide */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
