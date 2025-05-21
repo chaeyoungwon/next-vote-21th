@@ -36,7 +36,9 @@ const InputField = ({
             onChange={onChange}
             placeholder={placeholder}
             autoComplete={autoComplete}
-            className="text-cap1-med min-w-[226px] border-b border-black py-1 pr-8 outline-none placeholder:text-gray-600 md:!text-base"
+            className={`text-cap1-med min-w-[226px] border-b border-black py-1 outline-none placeholder:text-gray-600 md:!text-sm ${
+              isPasswordField ? "pr-6" : ""
+            }`}
           />
 
           {/* 눈 아이콘 */}
