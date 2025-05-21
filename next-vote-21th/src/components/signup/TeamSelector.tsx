@@ -21,7 +21,7 @@ const TeamSelector = ({
     <div className="mb-12 flex flex-col">
       <div className="flex gap-3">
         <div className="mb-2">
-          <p className="text-body1-sb mb-2 md:!text-[18px]">팀명 *</p>
+          <p className="text-body1-sb md:text-heading4 mb-2">팀명 *</p>
           <Dropdown
             options={teams}
             selected={selectedTeam}
@@ -31,7 +31,7 @@ const TeamSelector = ({
         </div>
 
         <div className="mb-2">
-          <p className="text-body1-sb mb-2 md:!text-[18px]">이름 *</p>
+          <p className="text-body1-sb md:text-heading4 mb-2">이름 *</p>
           <Dropdown
             options={members}
             selected={selectedMember}

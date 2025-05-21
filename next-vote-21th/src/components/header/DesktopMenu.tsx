@@ -13,7 +13,7 @@ const DesktopMenu = () => {
         return (
           <li
             key={label}
-            className={`text-body1-med text-violet-dark w-[100px] text-center hover:underline min-md:!text-[20px] ${
+            className={`text-body1-med text-violet-dark w-[100px] text-center hover:underline md:text-xl ${
               isActive ? "font-semibold underline" : ""
             }`}
           >

@@ -27,7 +27,7 @@ const InputField = ({
   return (
     <label className="flex flex-col gap-[3px]">
       <div className="flex items-start gap-[10px]">
-        <span className="text-body1-sb w-[77px] md:!text-[18px]">{label}</span>
+        <span className="text-body1-sb md:text-heading4 w-[77px]">{label}</span>
 
         <div className="relative flex flex-col">
           <input
@@ -36,7 +36,7 @@ const InputField = ({
             onChange={onChange}
             placeholder={placeholder}
             autoComplete={autoComplete}
-            className={`text-cap1-med min-w-[226px] border-b border-black py-1 outline-none placeholder:text-gray-600 md:!text-sm ${
+            className={`text-cap1-med md:text-body2-med min-w-[226px] border-b border-black py-1 outline-none placeholder:text-gray-600 ${
               isPasswordField ? "pr-6" : ""
             }`}
           />

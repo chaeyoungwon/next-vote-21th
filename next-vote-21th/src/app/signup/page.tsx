@@ -43,7 +43,7 @@ const SignUpPage = () => {
     <div className="flex min-h-screen w-screen flex-col items-center pt-[124px] md:pt-[121px]">
       <div className="flex w-[313px] flex-col">
         <div className="flex flex-col gap-9">
-          <h1 className="text-heading3 text-green-dark md:!text-[1.375rem]">
+          <h1 className="text-heading3 text-green-dark md:text-heading1">
             SIGN UP
           </h1>
 
@@ -131,7 +131,7 @@ const SignUpPage = () => {
             disabled={
               isDisabled || !selectedPart || !selectedTeam || !selectedMember
             }
-            className={`text-heading3 w-[313px] rounded-[20px] py-3 text-white md:!text-[1.25rem] ${
+            className={`text-heading3 md:text-heading2 w-[313px] rounded-[20px] py-3 text-white ${
               isDisabled || !selectedPart || !selectedTeam || !selectedMember
                 ? "cursor-not-allowed bg-gray-300"
                 : "bg-green"

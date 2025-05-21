@@ -26,7 +26,7 @@ const LoginPage = () => {
   return (
     <div className="flex min-h-screen w-screen flex-col items-center pt-[124px] md:pt-[272px]">
       <div className="flex w-[313px] flex-col gap-[46px] md:gap-[44px]">
-        <h1 className="text-heading3 text-green-dark md:!text-[1.375rem]">
+        <h1 className="text-heading3 text-green-dark md:text-heading1">
           LOGIN
         </h1>
 
@@ -58,14 +58,14 @@ const LoginPage = () => {
           </div>
 
           <button
-            className="bg-green text-heading3 mt-[30px] h-fit w-full cursor-pointer rounded-[20px] py-[10px] text-white focus:outline-none md:mt-[44px] md:!text-[1.25rem]"
+            className="bg-green text-heading3 md:heading2 mt-[30px] h-fit w-full cursor-pointer rounded-[20px] py-[10px] text-white focus:outline-none md:mt-[44px]"
             onClick={handleLogin}
           >
             로그인하기
           </button>
         </form>
 
-        <span className="text-cap1-med mt-[22px] text-center text-gray-800 underline md:!text-[14px]">
+        <span className="text-cap1-med md:text-body2-med mt-[22px] text-center text-gray-800 underline">
           <Link href="/signup">계정이 없다면 회원가입하러 가기 &gt;</Link>
         </span>
       </div>
