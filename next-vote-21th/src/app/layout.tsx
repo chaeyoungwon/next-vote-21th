@@ -37,8 +37,10 @@ export default function RootLayout({
   return (
     <html lang="ko" className={suit.className}>
       <body>
-        <Header />
-        {children}
+        <div className="flex h-screen w-screen">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );

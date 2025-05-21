@@ -30,7 +30,7 @@ const Header = () => {
   }, [isOpen]);
 
   return (
-    <nav className="relative flex h-16 items-center justify-between border border-gray-200 bg-gray-100 px-[21px] py-[22px] min-md:px-[31px]">
+    <nav className="fixed top-0 left-0 z-99 flex h-16 w-full items-center justify-between border border-gray-200 bg-gray-100 px-[21px] py-[22px] min-md:px-[31px]">
       <Link href="/">
         <Logo />
       </Link>
