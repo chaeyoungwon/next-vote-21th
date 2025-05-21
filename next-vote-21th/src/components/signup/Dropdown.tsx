@@ -41,13 +41,7 @@ const Dropdown = ({
         className="border-green text-green text-body1-sb flex w-full cursor-pointer items-center justify-between rounded-[20px] border px-4 py-2 text-left transition"
       >
         <span>{selected || placeholder}</span>
-        <span
-          className={`ml-2 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-        >
-          ▾
-        </span>
+        <span className={`ml-2 ${isOpen ? "rotate-180" : ""}`}>▾</span>
       </button>
 
       {isOpen && (

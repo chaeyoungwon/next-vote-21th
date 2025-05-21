@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 
+import { useSignupForm } from "@/hooks/useSignUpForm";
+
 import InputField from "@/components/common/InputField";
-import Dropdown from "@/components/signup/Dropdown";
+import PartSelector from "@/components/signup/PartSelector";
+import TeamSelector from "@/components/signup/TeamSelector";
 
 import { teamList } from "@/constants/signup/teamLists";
 
@@ -11,6 +14,9 @@ type Part = keyof typeof teamList;
 type Team = keyof (typeof teamList)[Part];
 
 const SignUpPage = () => {
+  const { form, setForm, errors, setErrors, isDisabled, validate } =
+    useSignupForm();
+
   const [selectedPart, setSelectedPart] = useState<Part | null>("Front-End");
   const [selectedTeam, setSelectedTeam] = useState<Team | "">("");
   const [selectedMember, setSelectedMember] = useState("");
@@ -21,135 +27,51 @@ const SignUpPage = () => {
       ? teamList[selectedPart][selectedTeam as Team] || []
       : [];
 
-  const [form, setForm] = useState({
-    id: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const [errors, setErrors] = useState({
-    id: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const validate = () => {
-    let passwordError = "";
-    const password = form.password;
-
-    if (password.length < 8 || password.length > 20) {
-      passwordError = "8~20자 사이로 입력해주세요.";
-    } else if (!/(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[\W_])/.test(password)) {
-      passwordError = "문자, 숫자, 특수문자를 모두 포함해주세요.";
-    }
-    const newErrors = {
-      id:
-        form.id.length < 6 || form.id.length > 20
-          ? "아이디는 6~20자입니다."
-          : "",
-      email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
-        ? "이메일 형식이 올바르지 않습니다."
-        : "",
-      password: passwordError,
-      confirmPassword:
-        form.password !== form.confirmPassword
-          ? "비밀번호가 일치하지 않습니다."
-          : "",
-    };
-    setErrors(newErrors);
-    return Object.values(newErrors).every(err => err === "");
-  };
+  useEffect(() => {
+    const hasSelects = !selectedPart || !selectedTeam || !selectedMember;
+    setErrors(prev => ({ ...prev, disabled: hasSelects ? "true" : "" }));
+  }, [selectedPart, selectedTeam, selectedMember]);
 
   const handleSubmit = () => {
-    if (!validate()) return;
+    const isValid = validate();
+    if (!isValid || !selectedPart || !selectedTeam || !selectedMember) return;
     alert("회원가입 완료!");
     // TODO: API 호출
   };
 
-  const [isDisabled, setIsDisabled] = useState(true);
-
-  useEffect(() => {
-    const hasError = Object.values(errors).some(e => e);
-    const hasEmpty =
-      !form.id || !form.email || !form.password || !form.confirmPassword;
-    const hasSelects = !selectedPart || !selectedTeam || !selectedMember;
-
-    setIsDisabled(hasError || hasEmpty || hasSelects);
-  }, [form, errors, selectedPart, selectedTeam, selectedMember]);
-
   return (
     <div className="flex min-h-screen w-screen flex-col items-center pt-[124px] md:pt-[121px]">
       <div className="flex w-[313px] flex-col">
-        <div className="flex flex-col gap-[37px] md:gap-[44px]">
+        <div className="flex flex-col gap-9">
           <h1 className="text-heading3 text-green-dark md:!text-[1.375rem]">
             SIGN UP
           </h1>
 
-          {/* 파트 선택 */}
-          <div className="mx-auto w-full min-w-[313px]">
-            <p className="text-body1-sb mb-[15px] md:!text-[18px]">파트 *</p>
-            <div className="border-green flex w-full overflow-hidden rounded-full border">
-              {(["Front-End", "Back-End"] as Part[]).map(part => (
-                <button
-                  key={part}
-                  onClick={() => {
-                    setSelectedPart(part);
-                    setSelectedTeam("");
-                    setSelectedMember("");
-                  }}
-                  className={`text-heading3 w-1/2 cursor-pointer px-6 py-2 transition-colors duration-200 ${
-                    selectedPart === part ? "bg-green text-white" : "text-green"
-                  } ${part === "Front-End" ? "rounded-l-full" : "rounded-r-full"}`}
-                >
-                  {part}
-                </button>
-              ))}
-            </div>
-          </div>
+          <PartSelector
+            selectedPart={selectedPart}
+            onSelect={part => {
+              setSelectedPart(part);
+              setSelectedTeam("");
+              setSelectedMember("");
+            }}
+          />
 
-          {/* 팀/이름 선택 */}
-
-          <div className="mb-12 flex flex-col">
-            <div className="flex gap-3">
-              <div className="mb-2">
-                <p className="text-body1-sb mb-2 md:!text-[18px]">팀명 *</p>
-                <Dropdown
-                  options={teams}
-                  selected={selectedTeam}
-                  onSelect={team => {
-                    setSelectedTeam(team as Team);
-                    setSelectedMember("");
-                  }}
-                  placeholder="팀 선택"
-                />
-              </div>
-
-              <div className="mb-2">
-                <p className="text-body1-sb mb-2 md:!text-[18px]">이름 *</p>
-
-                <Dropdown
-                  options={members}
-                  selected={selectedMember}
-                  onSelect={setSelectedMember}
-                  placeholder={selectedTeam ? "이름 선택" : "- - -"}
-                  disabled={!selectedTeam}
-                />
-              </div>
-            </div>
-            {!selectedTeam ? (
-              <p className="text-cap1-med text-right text-gray-700">
-                팀을 먼저 선택해주세요.
-              </p>
-            ) : null}
-          </div>
+          <TeamSelector
+            teams={teams}
+            members={members}
+            selectedTeam={selectedTeam}
+            selectedMember={selectedMember}
+            onTeamSelect={team => {
+              setSelectedTeam(team as Team);
+              setSelectedMember("");
+            }}
+            onMemberSelect={setSelectedMember}
+          />
         </div>
 
-        {/* 입력 필드 */}
         <form
           onSubmit={e => {
-            e.preventDefault(); // 폼 제출 시 새로고침 방지
+            e.preventDefault();
             handleSubmit();
           }}
           className="flex w-[313px] flex-col"
@@ -203,18 +125,22 @@ const SignUpPage = () => {
               error={errors.confirmPassword}
             />
           </div>
+
+          <button
+            type="submit"
+            disabled={
+              isDisabled || !selectedPart || !selectedTeam || !selectedMember
+            }
+            className={`text-heading3 w-[313px] rounded-[20px] py-3 text-white md:!text-[1.25rem] ${
+              isDisabled || !selectedPart || !selectedTeam || !selectedMember
+                ? "cursor-not-allowed bg-gray-300"
+                : "bg-green"
+            }`}
+          >
+            가입하기
+          </button>
         </form>
       </div>
-
-      <button
-        onClick={handleSubmit}
-        disabled={isDisabled}
-        className={`w-[313px] rounded-full py-3 text-sm font-semibold text-white ${
-          isDisabled ? "cursor-not-allowed bg-gray-300" : "bg-green"
-        }`}
-      >
-        가입하기
-      </button>
     </div>
   );
 };
