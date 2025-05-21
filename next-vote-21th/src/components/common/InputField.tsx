@@ -5,6 +5,7 @@ interface InputFieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
+  autoComplete?: string;
 }
 
 const InputField = ({
@@ -14,6 +15,7 @@ const InputField = ({
   value,
   onChange,
   error,
+  autoComplete,
 }: InputFieldProps) => {
   return (
     <label className="flex flex-col gap-[3px]">
@@ -25,6 +27,7 @@ const InputField = ({
             value={value}
             onChange={onChange}
             placeholder={placeholder}
+            autoComplete={autoComplete}
             className="text-cap1-med min-w-[226px] border-b border-black py-1 outline-none placeholder:text-gray-600 md:!text-base"
           />
           <span className="text-cap1-med text-red h-[1.25rem] md:h-[0.875rem]">

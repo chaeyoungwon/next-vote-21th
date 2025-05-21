@@ -2,18 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-import InputField from "@/components/login/InputField";
+import InputField from "@/components/common/InputField";
+import Dropdown from "@/components/signup/Dropdown";
 
-const teamList = {
-  "Front-End": {
-    하니홈: ["원채영", "신수진"],
-    팝업사이클: ["홍길동", "김코드"],
-  },
-  "Back-End": {
-    인플루이: ["백지훈", "남백엔드"],
-    이어드림: ["이승수", "박서버"],
-  },
-} as const;
+import { teamList } from "@/constants/signup/teamLists";
 
 type Part = keyof typeof teamList;
 type Team = keyof (typeof teamList)[Part];
@@ -86,6 +78,7 @@ const SignUpPage = () => {
 
     setIsDisabled(hasError || hasEmpty || hasSelects);
   }, [form, errors, selectedPart, selectedTeam, selectedMember]);
+
   return (
     <div className="flex min-h-screen w-screen flex-col items-center pt-[124px] md:pt-[121px]">
       <div className="flex w-[313px] flex-col">
@@ -106,10 +99,8 @@ const SignUpPage = () => {
                     setSelectedTeam("");
                     setSelectedMember("");
                   }}
-                  className={`text-heading3 w-1/2 px-6 py-2 transition-colors duration-200 ${
-                    selectedPart === part
-                      ? "bg-green text-white"
-                      : "text-green hover:bg-green-light"
+                  className={`text-heading3 w-1/2 cursor-pointer px-6 py-2 transition-colors duration-200 ${
+                    selectedPart === part ? "bg-green text-white" : "text-green"
                   } ${part === "Front-End" ? "rounded-l-full" : "rounded-r-full"}`}
                 >
                   {part}
@@ -119,93 +110,100 @@ const SignUpPage = () => {
           </div>
 
           {/* 팀/이름 선택 */}
-          <div className="mb-15 flex gap-3">
-            <div className="mb-2">
-              <p className="text-body1-sb mb-2 md:!text-[18px]">팀명 *</p>
-              <select
-                value={selectedTeam}
-                onChange={e => {
-                  setSelectedTeam(e.target.value as Team);
-                  setSelectedMember("");
-                }}
-                disabled={!selectedPart}
-                className="border-green text-green w-[150px] rounded-[20px] border px-4 py-2"
-              >
-                <option value="">팀 선택</option>
-                {teams.map(team => (
-                  <option key={team} value={team}>
-                    {team}
-                  </option>
-                ))}
-              </select>
-            </div>
 
-            <div className="mb-2">
-              <p className="text-body1-sb mb-2 md:!text-[18px]">이름 *</p>
-              <select
-                value={selectedMember}
-                onChange={e => setSelectedMember(e.target.value)}
-                disabled={!selectedTeam}
-                className="border-green text-green w-[150px] rounded-[20px] border px-4 py-2"
-              >
-                <option value="">이름 선택</option>
-                {members.map(member => (
-                  <option key={member} value={member}>
-                    {member}
-                  </option>
-                ))}
-              </select>
+          <div className="mb-12 flex flex-col">
+            <div className="flex gap-3">
+              <div className="mb-2">
+                <p className="text-body1-sb mb-2 md:!text-[18px]">팀명 *</p>
+                <Dropdown
+                  options={teams}
+                  selected={selectedTeam}
+                  onSelect={team => {
+                    setSelectedTeam(team as Team);
+                    setSelectedMember("");
+                  }}
+                  placeholder="팀 선택"
+                />
+              </div>
+
+              <div className="mb-2">
+                <p className="text-body1-sb mb-2 md:!text-[18px]">이름 *</p>
+
+                <Dropdown
+                  options={members}
+                  selected={selectedMember}
+                  onSelect={setSelectedMember}
+                  placeholder={selectedTeam ? "이름 선택" : "- - -"}
+                  disabled={!selectedTeam}
+                />
+              </div>
             </div>
+            {!selectedTeam ? (
+              <p className="text-cap1-med text-right text-gray-700">
+                팀을 먼저 선택해주세요.
+              </p>
+            ) : null}
           </div>
         </div>
 
         {/* 입력 필드 */}
-        <div className="mb-6 flex flex-col gap-[10px]">
-          <InputField
-            label="아이디 *"
-            placeholder="아이디를 입력해주세요. (6~20자)"
-            value={form.id}
-            onChange={e => {
-              setForm({ ...form, id: e.target.value });
-              if (errors.id) setErrors(prev => ({ ...prev, id: "" }));
-            }}
-            error={errors.id}
-          />
-          <InputField
-            label="이메일 *"
-            placeholder="이메일을 입력해주세요."
-            value={form.email}
-            onChange={e => {
-              setForm({ ...form, email: e.target.value });
-              if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
-            }}
-            error={errors.email}
-          />
-          <InputField
-            label="비밀번호 *"
-            type="password"
-            placeholder="문자, 숫자, 특수문자 포함 8~20자"
-            value={form.password}
-            onChange={e => {
-              setForm({ ...form, password: e.target.value });
-              if (errors.password)
-                setErrors(prev => ({ ...prev, password: "" }));
-            }}
-            error={errors.password}
-          />
-          <InputField
-            label="비밀번호 재입력 *"
-            type="password"
-            placeholder="비밀번호 재입력"
-            value={form.confirmPassword}
-            onChange={e => {
-              setForm({ ...form, confirmPassword: e.target.value });
-              if (errors.confirmPassword)
-                setErrors(prev => ({ ...prev, confirmPassword: "" }));
-            }}
-            error={errors.confirmPassword}
-          />
-        </div>
+        <form
+          onSubmit={e => {
+            e.preventDefault(); // 폼 제출 시 새로고침 방지
+            handleSubmit();
+          }}
+          className="flex w-[313px] flex-col"
+        >
+          <div className="mb-6 flex flex-col gap-[10px]">
+            <InputField
+              label="아이디 *"
+              placeholder="아이디를 입력해주세요. (6~20자)"
+              value={form.id}
+              onChange={e => {
+                setForm({ ...form, id: e.target.value });
+                if (errors.id) setErrors(prev => ({ ...prev, id: "" }));
+              }}
+              error={errors.id}
+            />
+            <InputField
+              label="이메일 *"
+              placeholder="이메일을 입력해주세요."
+              value={form.email}
+              autoComplete="email"
+              onChange={e => {
+                setForm({ ...form, email: e.target.value });
+                if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
+              }}
+              error={errors.email}
+            />
+            <InputField
+              label="비밀번호 *"
+              type="password"
+              autoComplete="new-password"
+              placeholder="문자, 숫자, 특수문자 포함 8~20자"
+              value={form.password}
+              onChange={e => {
+                setForm({ ...form, password: e.target.value });
+                if (errors.password)
+                  setErrors(prev => ({ ...prev, password: "" }));
+              }}
+              error={errors.password}
+            />
+            <InputField
+              label="비밀번호 * 재입력 "
+              type="password"
+              autoComplete="new-password"
+              placeholder="비밀번호 재입력"
+              value={form.confirmPassword}
+              onChange={e => {
+                setForm({ ...form, confirmPassword: e.target.value });
+                if (errors.confirmPassword)
+                  setErrors(prev => ({ ...prev, confirmPassword: "" }));
+              }}
+              error={errors.confirmPassword}
+            />
+          </div>
+        </form>
       </div>
 
       <button

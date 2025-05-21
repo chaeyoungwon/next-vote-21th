@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { useState } from "react";
 
-import InputField from "@/components/login/InputField";
+import InputField from "@/components/common/InputField";
 
 const LoginPage = () => {
   const [form, setForm] = useState({
@@ -30,7 +30,13 @@ const LoginPage = () => {
           LOGIN
         </h1>
 
-        <div className="flex w-full flex-col">
+        <form
+          onSubmit={e => {
+            e.preventDefault(); // 새로고침 방지
+            handleLogin(); // 로그인 로직 실행
+          }}
+          className="flex w-full flex-col"
+        >
           <div className="flex flex-col gap-[13px] md:gap-[18px]">
             <InputField
               label="아이디"
@@ -38,6 +44,7 @@ const LoginPage = () => {
               value={form.id}
               onChange={e => setForm({ ...form, id: e.target.value })}
               error={idError}
+              autoComplete="username"
             />
             <InputField
               label="비밀번호"
@@ -46,6 +53,7 @@ const LoginPage = () => {
               value={form.password}
               onChange={e => setForm({ ...form, password: e.target.value })}
               error={pwError}
+              autoComplete="current-password"
             />
           </div>
 
@@ -55,11 +63,11 @@ const LoginPage = () => {
           >
             로그인하기
           </button>
+        </form>
 
-          <span className="text-cap1-med mt-[22px] text-center text-gray-800 underline md:!text-[14px]">
-            <Link href="/signup">계정이 없다면 회원가입하러 가기 &gt;</Link>
-          </span>
-        </div>
+        <span className="text-cap1-med mt-[22px] text-center text-gray-800 underline md:!text-[14px]">
+          <Link href="/signup">계정이 없다면 회원가입하러 가기 &gt;</Link>
+        </span>
       </div>
     </div>
   );
