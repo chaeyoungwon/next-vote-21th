@@ -1,0 +1,56 @@
+"use client";
+
+import Link from "next/link";
+
+import { useEffect, useRef, useState } from "react";
+
+import HamburgerMenu from "@/public/svgs/header/hamburgerMenu.svg";
+import Logo from "@/public/svgs/header/logo.svg";
+
+import DesktopMenu from "./DesktopMenu";
+import MobileMenu from "./MobileMenu";
+
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  return (
+    <nav className="relative flex h-16 items-center justify-between border border-gray-200 bg-gray-100 px-[21px] py-[22px] min-md:px-[31px]">
+      <Link href="/">
+        <Logo />
+      </Link>
+
+      <button
+        className="cursor-pointer min-md:hidden"
+        onClick={() => setIsOpen(prev => !prev)}
+        aria-label="Toggle Menu"
+      >
+        <HamburgerMenu />
+      </button>
+
+      <DesktopMenu />
+      <MobileMenu
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        menuRef={menuRef}
+      />
+    </nav>
+  );
+};
+
+export default Header;
