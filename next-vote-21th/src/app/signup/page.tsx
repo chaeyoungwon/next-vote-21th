@@ -1,10 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
 
 import { useSignupForm } from "@/hooks/useSignUpForm";
 
 import InputField from "@/components/common/InputField";
+import SignUpModal from "@/components/common/SignUpModal";
 import PartSelector from "@/components/signup/PartSelector";
 import TeamSelector from "@/components/signup/TeamSelector";
 
@@ -20,6 +23,8 @@ const SignUpPage = () => {
   const [selectedPart, setSelectedPart] = useState<Part | null>("Front-End");
   const [selectedTeam, setSelectedTeam] = useState<Team | "">("");
   const [selectedMember, setSelectedMember] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
 
   const teams = selectedPart ? Object.keys(teamList[selectedPart]) : [];
   const members =
@@ -37,6 +42,9 @@ const SignUpPage = () => {
     if (!isValid || !selectedPart || !selectedTeam || !selectedMember) return;
     alert("회원가입 완료!");
     // TODO: API 호출
+  };
+  const handleClick = () => {
+    setIsModalOpen(true);
   };
 
   return (
@@ -128,6 +136,7 @@ const SignUpPage = () => {
 
           <button
             type="submit"
+            onClick={handleClick}
             disabled={
               isDisabled || !selectedPart || !selectedTeam || !selectedMember
             }
@@ -140,6 +149,14 @@ const SignUpPage = () => {
             가입하기
           </button>
         </form>
+        {isModalOpen && (
+          <SignUpModal
+            onConfirm={() => {
+              setIsModalOpen(false);
+              router.push("/login");
+            }}
+          />
+        )}
       </div>
     </div>
   );
