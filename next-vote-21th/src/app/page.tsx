@@ -16,7 +16,6 @@ const HomePage = () => {
       router.push("/vote")
     }else{
       setIsModalOpen(true)
-      console.log("모달열림")
     }
 
   }
