@@ -48,7 +48,10 @@ const Header = () => {
         <HamburgerMenu />
       </button>
 
-      <DesktopMenu />
+      <DesktopMenu 
+        isLoggedIn={isLoggedIn}
+        onLoginRequired={() => setIsModalOpen(true)}
+      />
       <MobileMenu
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
