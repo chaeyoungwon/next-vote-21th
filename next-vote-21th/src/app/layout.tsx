@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import "@/styles/globals.css";
-import Header from "src/components/header/Header";
+import Header from "@/components/header/Header";
 
 const suit = localFont({
   src: "../../public/fonts/SUIT-Variable.woff2",

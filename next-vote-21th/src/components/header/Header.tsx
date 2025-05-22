@@ -7,8 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import HamburgerMenu from "@/public/svgs/header/hamburgerMenu.svg";
 import Logo from "@/public/svgs/header/logo.svg";
 
-import DesktopMenu from "./DesktopMenu";
-import MobileMenu from "./MobileMenu";
+import DesktopMenu from "@/components/header/DesktopMenu";
+import MobileMenu from "@/components/header/MobileMenu";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
