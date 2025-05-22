@@ -8,9 +8,11 @@ interface MobileMenuProps {
   onClose: () => void;
   menuRef: React.RefObject<HTMLDivElement | null>;
   isOpen: boolean;
+  isLoggedIn: boolean;
+  onLoginRequired: () => void;
 }
 
-const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
+const MobileMenu = ({ onClose, menuRef, isOpen, isLoggedIn, onLoginRequired }: MobileMenuProps) => {
   return (
     <div
       ref={menuRef}
@@ -31,16 +33,27 @@ const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
       </button>
 
       {/* 메뉴 아이템들 */}
-      {menuItems.map(({ label, href }) => (
-        <Link
-          key={label}
-          href={href}
-          onClick={onClose}
-          className="text-violet-dark text-heading2 hover:border-violet-dark w-[174px] cursor-pointer border border-transparent py-[10px] pr-4 text-right"
-        >
-          {label}
-        </Link>
-      ))}
+      {menuItems.map(({ label, href }) => {
+        
+        const handleClick = (e: React.MouseEvent) => {
+          if (label === "Vote" && !isLoggedIn) {
+            e.preventDefault(); // 기본 링크 이동 막기
+            onLoginRequired();  // 로그인 모달 오픈
+          } else {
+            onClose(); // 바로 닫기
+          }
+        };
+      
+        return(
+          <Link
+            key={label}
+            href={href}
+            onClick={handleClick}
+            className="text-violet-dark text-heading2 hover:border-violet-dark w-[174px] cursor-pointer border border-transparent py-[10px] pr-4 text-right"
+          >
+            {label}
+          </Link>);
+      })}
     </div>
   );
 };

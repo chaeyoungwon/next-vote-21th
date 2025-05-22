@@ -9,10 +9,15 @@ import Logo from "@/public/svgs/header/logo.svg";
 
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
+import LoginModal from "../common/LoginModal";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter()
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,7 +53,18 @@ const Header = () => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         menuRef={menuRef}
+        isLoggedIn={isLoggedIn}
+        onLoginRequired={() => setIsModalOpen(true)}
       />
+        {isModalOpen && (
+          <LoginModal
+            onClose={() => setIsModalOpen(false)}
+            onConfirm={() => {
+              setIsModalOpen(false);
+              router.push("/login");
+            }}
+          />
+        )}
     </nav>
   );
 };
