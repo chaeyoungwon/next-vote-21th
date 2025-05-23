@@ -2,14 +2,7 @@ import { useEffect, useState } from "react";
 
 import { signupSchema } from "@/schemas/signupSchema";
 
-type SignupForm = {
-  id: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
-
-type SignupErrors = Record<keyof SignupForm, string>;
+import { SignupErrors, SignupForm } from "@/types/signup/dto";
 
 const initialForm: SignupForm = {
   id: "",

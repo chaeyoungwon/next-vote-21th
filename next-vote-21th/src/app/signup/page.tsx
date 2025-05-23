@@ -2,21 +2,17 @@
 
 import { useRouter } from "next/navigation";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { signup } from "@/apis/auth";
-import {
-  checkEmailDuplicate,
-  checkUsernameDuplicate,
-} from "@/apis/checkDuplicate";
 
+import { useDuplicateChecker } from "@/hooks/useDuplicateChecker";
 import { useSignupForm } from "@/hooks/useSignUpForm";
+import { useTeamSelection } from "@/hooks/useTeamSelection";
 
-import InputField from "@/components/common/InputField";
 import PartSelector from "@/components/signup/PartSelector";
+import SignupFormFields from "@/components/signup/SignUpFormFields";
 import TeamSelector from "@/components/signup/TeamSelector";
-
-import { teamList } from "@/constants/signup/teamLists";
 
 const SignUpPage = () => {
   const { form, setForm, errors, setErrors, isDisabled, validate } =
@@ -28,48 +24,26 @@ const SignUpPage = () => {
   });
   const router = useRouter();
 
-  const [selectedLabel, setSelectedLabel] = useState("Front-End");
-  const [selectedTeamName, setSelectedTeamName] = useState("");
-  const [selectedMember, setSelectedMember] = useState("");
+  const {
+    selectedLabel,
+    selectedTeamName,
+    selectedMember,
+    setSelectedLabel,
+    setSelectedTeamName,
+    setSelectedMember,
+    positionKey,
+    selectedTeam,
+    teams,
+    members,
+  } = useTeamSelection();
 
-  const positionKey = useMemo<"FRONTEND" | "BACKEND">(
-    () => (selectedLabel === "Front-End" ? "FRONTEND" : "BACKEND"),
-    [selectedLabel],
-  );
-
-  const teams = useMemo(() => teamList.map(team => team.name), []);
-
-  const selectedTeam = useMemo(
-    () => teamList.find(team => team.name === selectedTeamName),
-    [selectedTeamName],
-  );
-
-  const members = useMemo(
-    () => selectedTeam?.members?.[positionKey] ?? [],
-    [selectedTeam, positionKey],
-  );
+  const { check } = useDuplicateChecker();
 
   const handleInputChange =
     (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setForm(prev => ({ ...prev, [key]: e.target.value }));
       if (errors[key]) setErrors(prev => ({ ...prev, [key]: "" }));
     };
-
-  const handleCheckDuplicate = async (
-    type: "id" | "email",
-    checkFn: (
-      value: string,
-    ) => Promise<{ isDuplicate: boolean; message: string }>,
-  ) => {
-    const value = form[type];
-    const { isDuplicate, message } = await checkFn(value);
-    setErrors(prev => ({ ...prev, [type]: isDuplicate ? message : "" }));
-    setStatuses(prev => ({
-      ...prev,
-      [type]: isDuplicate ? "error" : "success",
-    }));
-    if (!isDuplicate && type === "email") alert(message);
-  };
 
   useEffect(() => {
     const hasSelects = !positionKey || !selectedTeam || !selectedMember;
@@ -89,17 +63,19 @@ const SignUpPage = () => {
       team: selectedTeam.code,
     };
 
-    try {
-      await signup(payload);
+    const result = await signup(payload);
+    if (result) {
       router.push("/login");
-    } catch (error) {
-      console.error("회원가입 실패:", error);
-      alert("회원가입에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   const isSubmitDisabled =
-    isDisabled || !positionKey || !selectedTeam || !selectedMember;
+    isDisabled ||
+    !positionKey ||
+    !selectedTeam ||
+    !selectedMember ||
+    statuses.id !== "success" ||
+    statuses.email !== "success";
 
   return (
     <div className="scrollbar-hide flex min-h-screen w-screen flex-col items-center overflow-y-auto pt-[124px] pb-9 md:pt-[121px]">
@@ -138,61 +114,16 @@ const SignUpPage = () => {
           }}
           className="flex w-[313px] flex-col"
         >
-          <div className="mb-6 flex flex-col gap-[10px]">
-            <InputField
-              label="아이디 *"
-              placeholder="6~20자 이내로 입력해주세요."
-              value={form.id}
-              onChange={handleInputChange("id")}
-              onCheckDuplicate={() =>
-                handleCheckDuplicate("id", checkUsernameDuplicate)
-              }
-              showCheckButton
-              error={errors.id}
-              status={statuses.id}
-            />
-
-            <InputField
-              label="이메일 *"
-              placeholder="이메일을 입력해주세요."
-              value={form.email}
-              autoComplete="email"
-              onChange={handleInputChange("email")}
-              onCheckDuplicate={() =>
-                handleCheckDuplicate("email", checkEmailDuplicate)
-              }
-              showCheckButton
-              error={errors.email}
-              status={statuses.email}
-            />
-
-            <InputField
-              label="비밀번호 *"
-              type="password"
-              autoComplete="new-password"
-              placeholder="문자, 숫자, 특수문자 포함 8~20자"
-              value={form.password}
-              onChange={e => {
-                setForm({ ...form, password: e.target.value });
-                if (errors.password)
-                  setErrors(prev => ({ ...prev, password: "" }));
-              }}
-              error={errors.password}
-            />
-            <InputField
-              label="비밀번호 * 재입력 "
-              type="password"
-              autoComplete="new-password"
-              placeholder="비밀번호 재입력"
-              value={form.confirmPassword}
-              onChange={e => {
-                setForm({ ...form, confirmPassword: e.target.value });
-                if (errors.confirmPassword)
-                  setErrors(prev => ({ ...prev, confirmPassword: "" }));
-              }}
-              error={errors.confirmPassword}
-            />
-          </div>
+          <SignupFormFields
+            form={form}
+            errors={errors}
+            statuses={statuses}
+            setStatuses={setStatuses}
+            setForm={setForm}
+            setErrors={setErrors}
+            handleInputChange={handleInputChange}
+            check={check}
+          />
 
           <button
             type="submit"

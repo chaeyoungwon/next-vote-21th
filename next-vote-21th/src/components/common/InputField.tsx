@@ -77,7 +77,7 @@ const InputField = ({
           <span
             className={clsx(
               "text-cap1-med mt-1 h-[1.25rem] md:h-[0.875rem]",
-              status === "error" && "text-red",
+              error && "text-red",
               status === "success" && "text-green",
             )}
           >
