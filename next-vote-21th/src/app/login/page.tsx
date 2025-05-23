@@ -58,7 +58,7 @@ const LoginPage = () => {
           </div>
 
           <button
-            className="bg-green text-heading3 md:heading2 mt-[30px] h-fit w-full cursor-pointer rounded-[20px] py-[10px] text-white focus:outline-none md:mt-[44px]"
+            className="bg-green hover:bg-green-dark text-heading3 md:heading2 mt-[30px] h-fit w-full cursor-pointer rounded-[20px] py-[10px] text-white focus:outline-none md:mt-[44px]"
             onClick={handleLogin}
           >
             로그인하기

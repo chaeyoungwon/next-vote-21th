@@ -40,7 +40,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-screen flex-col items-center pt-[124px] md:pt-[121px]">
+    <div className="scrollbar-hide flex min-h-screen w-screen flex-col items-center overflow-y-auto pt-[124px] pb-9 md:pt-[121px]">
       <div className="flex w-[313px] flex-col">
         <div className="flex flex-col gap-9">
           <h1 className="text-heading3 text-green-dark md:text-heading1">

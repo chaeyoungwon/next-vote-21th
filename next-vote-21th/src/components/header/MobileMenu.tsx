@@ -15,7 +15,7 @@ const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
     <div
       ref={menuRef}
       className={clsx(
-        "fixed top-0 right-0 z-50 h-screen w-[240px] bg-gray-200 px-[13px] py-8 shadow-lg min-md:hidden",
+        "fixed top-0 right-0 z-50 h-screen w-[200px] bg-gray-200 px-[13px] py-8 shadow-lg min-md:hidden",
         "transition-transform duration-300 ease-in-out",
         "flex flex-col items-end gap-8",
         isOpen ? "translate-x-0" : "translate-x-full",
