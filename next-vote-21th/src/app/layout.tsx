@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 
 import "@/styles/globals.css";
 
+import Header from "@/components/header/Header";
+
 const suit = localFont({
   src: "../../public/fonts/SUIT-Variable.woff2",
   display: "swap",
@@ -35,7 +37,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={suit.className}>
-      <body>{children}</body>
+      <body>
+        <div className="flex h-screen w-screen">
+          <Header />
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
