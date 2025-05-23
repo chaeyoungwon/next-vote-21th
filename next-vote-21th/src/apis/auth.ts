@@ -1,3 +1,5 @@
+import { useAuthStore } from "@/stores/useAuthStore";
+
 import { axiosInstance } from "./axios";
 
 type SignupPayload = {
@@ -52,5 +54,10 @@ export const signup = async (payload: SignupPayload) => {
 };
 
 export const logout = async () => {
-  await axiosInstance.post("/api/v1/auth/logout");
+  try {
+    await axiosInstance.post("/api/v1/auth/logout");
+    useAuthStore.getState().clearAuth();
+  } catch (error) {
+    console.error("로그아웃 실패", error);
+  }
 };
