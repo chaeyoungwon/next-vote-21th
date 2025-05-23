@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import clsx from "clsx";
 import { Eye, EyeOff } from "lucide-react";
 
 interface InputFieldProps {
@@ -8,7 +9,11 @@ interface InputFieldProps {
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
+  onCheckDuplicate?: () => void; // 중복 확인 버튼 클릭 시
+  showCheckButton?: boolean; // 중복 확인 버튼 표시 여부
   error?: string;
+  status?: "error" | "success";
   autoComplete?: string;
 }
 
@@ -18,8 +23,12 @@ const InputField = ({
   placeholder,
   value,
   onChange,
+  onBlur,
+  onCheckDuplicate,
+  showCheckButton = false,
   error,
   autoComplete,
+  status,
 }: InputFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPasswordField = type === "password";
@@ -34,14 +43,16 @@ const InputField = ({
             type={isPasswordField && !showPassword ? "password" : "text"}
             value={value}
             onChange={onChange}
+            onBlur={onBlur}
             placeholder={placeholder}
             autoComplete={autoComplete}
-            className={`text-cap1-med md:text-body2-med min-w-[226px] border-b border-black py-1 outline-none placeholder:text-gray-600 ${
-              isPasswordField ? "pr-6" : ""
-            }`}
+            className={clsx(
+              "text-cap1-med md:text-body2-med min-w-[226px] border-b border-black py-1 outline-none placeholder:text-gray-600",
+              showCheckButton && !isPasswordField && "pr-[60px]",
+            )}
           />
 
-          {/* 눈 아이콘 */}
+          {/* 비밀번호 눈 아이콘 */}
           {isPasswordField && (
             <button
               type="button"
@@ -52,7 +63,24 @@ const InputField = ({
             </button>
           )}
 
-          <span className="text-cap1-med text-red mt-1 h-[1.25rem] md:h-[0.875rem]">
+          {/* 중복 확인 버튼 */}
+          {showCheckButton && !isPasswordField && (
+            <button
+              type="button"
+              onClick={onCheckDuplicate}
+              className="text-cap1-med bg-green text-gray-0 hover:bg-green-dark absolute top-[-2px] right-0 w-fit cursor-pointer rounded-[10px] px-[6px] py-1 md:top-[1px]"
+            >
+              중복 확인
+            </button>
+          )}
+
+          <span
+            className={clsx(
+              "text-cap1-med mt-1 h-[1.25rem] md:h-[0.875rem]",
+              status === "error" && "text-red",
+              status === "success" && "text-green",
+            )}
+          >
             {error || " "}
           </span>
         </div>

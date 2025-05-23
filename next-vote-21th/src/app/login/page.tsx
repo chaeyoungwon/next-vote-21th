@@ -1,8 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useState } from "react";
+
+import { useAuthStore } from "@/stores/useAuthStore";
+
+import { login } from "@/apis/auth";
 
 import InputField from "@/components/common/InputField";
 
@@ -15,12 +20,25 @@ const LoginPage = () => {
   const [idError, setIdError] = useState("");
   const [pwError, setPwError] = useState("");
 
-  const handleLogin = () => {
-    const isIdValid = form.id === "admin"; // 예시
-    const isPwValid = form.password === "1234"; // 예시
+  const router = useRouter();
+  const setAccessToken = useAuthStore(state => state.setAccessToken); // 상태 접근
 
-    setIdError(isIdValid ? "" : "존재하지 않는 아이디입니다.");
-    setPwError(isPwValid ? "" : "비밀번호가 일치하지 않습니다.");
+  const handleLogin = async () => {
+    setIdError("");
+    setPwError("");
+
+    try {
+      const accessToken = await login(form.id, form.password);
+      setAccessToken(accessToken); // 메모리에 저장
+      router.push("/");
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setIdError("아이디 또는 비밀번호가 일치하지 않습니다.");
+        setPwError("아이디 또는 비밀번호가 일치하지 않습니다.");
+      } else {
+        console.error("로그인 실패", err);
+      }
+    }
   };
 
   return (
@@ -32,8 +50,8 @@ const LoginPage = () => {
 
         <form
           onSubmit={e => {
-            e.preventDefault(); // 새로고침 방지
-            handleLogin(); // 로그인 로직 실행
+            e.preventDefault();
+            handleLogin();
           }}
           className="flex w-full flex-col"
         >
@@ -58,8 +76,8 @@ const LoginPage = () => {
           </div>
 
           <button
+            type="submit"
             className="bg-green hover:bg-green-dark text-heading3 md:heading2 mt-[30px] h-fit w-full cursor-pointer rounded-[20px] py-[10px] text-white focus:outline-none md:mt-[44px]"
-            onClick={handleLogin}
           >
             로그인하기
           </button>
