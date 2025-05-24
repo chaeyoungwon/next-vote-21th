@@ -1,23 +1,35 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { menuItems } from "@/constants/header/menuItems";
+import { useAuthStore } from "@/stores/useAuthStore";
 
-interface DesktoMenuProps {
+import { getMenuItems } from "@/constants/header/menuItems";
+
+interface DesktopMenuProps {
   isLoggedIn: boolean;
   onLoginRequired: () => void;
 }
-const DesktopMenu = ({ isLoggedIn, onLoginRequired }: DesktoMenuProps) => {
+
+const DesktopMenu = ({ isLoggedIn, onLoginRequired }: DesktopMenuProps) => {
+  const { clearAuth } = useAuthStore();
   const pathname = usePathname();
+
+  const menuItems = getMenuItems(isLoggedIn, clearAuth);
+
   return (
     <ul className="hidden gap-9 pr-[29px] min-md:flex">
-      {menuItems.map(({ label, href }) => {
+      {menuItems.map(({ label, href, onClick }) => {
         const isActive = pathname === href;
+
         const handleClick = (e: React.MouseEvent) => {
           if (label === "Vote" && !isLoggedIn) {
-            e.preventDefault(); // 기본 링크 이동 막기
-            onLoginRequired(); // 로그인 모달 오픈
+            e.preventDefault();
+            onLoginRequired();
+            return;
           }
+
+          // 사용자 정의 동작이 있다면 실행
+          onClick?.();
         };
 
         return (
@@ -27,9 +39,15 @@ const DesktopMenu = ({ isLoggedIn, onLoginRequired }: DesktoMenuProps) => {
               isActive ? "font-semibold underline" : ""
             }`}
           >
-            <Link href={href} onClick={handleClick}>
-              {label}
-            </Link>
+            {href ? (
+              <Link href={href} onClick={handleClick}>
+                {label}
+              </Link>
+            ) : (
+              <button onClick={handleClick} className="w-full text-inherit">
+                {label}
+              </button>
+            )}
           </li>
         );
       })}

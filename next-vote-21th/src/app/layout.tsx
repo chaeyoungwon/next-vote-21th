@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "CEOS 21th Vote",
     description: "CEOS 21기 활동을 위한 투표 플랫폼입니다.",
-    // url: "https://vote-ceos-21th.vercel.app", // 실제 배포 URL로 수정
+    url: "https://next-vote-21th.vercel.app",
     siteName: "CEOS Vote",
     type: "website",
   },
