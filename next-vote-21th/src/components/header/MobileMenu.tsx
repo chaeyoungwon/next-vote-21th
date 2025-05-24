@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/stores/useAuthStore";
 import clsx from "clsx";
 
-import { getMenuItems } from "@/constants/header/menuItems";
+import { getMenuItems } from "@/constants/menuItems";
 
 interface MobileMenuProps {
   onClose: () => void;

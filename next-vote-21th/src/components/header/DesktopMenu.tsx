@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import { getMenuItems } from "@/constants/header/menuItems";
+import { getMenuItems } from "@/constants/menuItems";
 
 interface DesktopMenuProps {
   isLoggedIn: boolean;

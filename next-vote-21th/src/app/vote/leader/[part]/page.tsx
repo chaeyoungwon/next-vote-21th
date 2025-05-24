@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import { useState } from "react";
 
@@ -10,10 +11,6 @@ import BackgroundShapes from "@/components/vote/BackgroundShape";
 import { BE, FE } from "@/constants/memberData";
 
 type Part = "frontend" | "backend";
-
-interface LeaderPageProps {
-  params: { part: Part };
-}
 
 const dataMap: Record<Part, Record<string, { college: string }>> = {
   frontend: FE,
@@ -25,8 +22,10 @@ const titleMap: Record<Part, string> = {
   backend: "21TH BACK-END",
 };
 
-const LeaderVotePage = ({ params }: LeaderPageProps) => {
-  const { part } = params;
+const LeaderVotePage = () => {
+  const params = useParams();
+  const part = params.part as Part;
+
   const title = titleMap[part];
   const candidates = Object.keys(dataMap[part]);
 
@@ -43,6 +42,8 @@ const LeaderVotePage = ({ params }: LeaderPageProps) => {
   return (
     <div className="mt-16 flex min-h-screen w-screen flex-col items-center justify-center">
       <BackgroundShapes />
+
+      {/* 헤더 + 투표하기 버튼 */}
       <div className="flex flex-row gap-[47px] pb-7">
         <div className="text-heading1 text-violet-pressed">{title}</div>
         <button
@@ -58,6 +59,7 @@ const LeaderVotePage = ({ params }: LeaderPageProps) => {
         </button>
       </div>
 
+      {/* 후보 목록 */}
       <div className="grid grid-cols-2 gap-x-[21px] gap-y-[7px]">
         {candidates.map(name => (
           <button
@@ -74,6 +76,7 @@ const LeaderVotePage = ({ params }: LeaderPageProps) => {
         ))}
       </div>
 
+      {/* 결과 페이지 이동 */}
       <Link
         className="text-heading2 text-violet-pressed pt-[45px]"
         href={`/vote/leader/${part}/result`}
@@ -81,17 +84,16 @@ const LeaderVotePage = ({ params }: LeaderPageProps) => {
         현재 투표 순위 보러 가기 &gt;
       </Link>
 
+      {/* 투표 확인 모달 */}
       {isModalOpen && selectedCandidate && (
         <VoteModal
           target={selectedCandidate}
           targetType="파트장"
           onConfirm={() => {
             setIsModalOpen(false);
-            // TODO: API 호출 등 투표 처리
+            // TODO: 실제 투표 API 호출 예정
           }}
-          onClose={() => {
-            setIsModalOpen(false);
-          }}
+          onClose={() => setIsModalOpen(false)}
         />
       )}
     </div>

@@ -1,12 +1,14 @@
 "use client";
 
+import Link from "next/link";
+
 import { useState } from "react";
 
 import clsx from "clsx";
 
 import VoteModal from "@/components/common/VoteModal";
 
-import { teamList } from "@/constants/signup/teamLists";
+import { teamList } from "@/constants/teamLists";
 
 const DemodayVotePage = () => {
   const teamNames = teamList.map(team => team.name);
@@ -63,6 +65,14 @@ const DemodayVotePage = () => {
             </div>
           ))}
         </div>
+
+        <Link
+          className="text-heading2 text-green-dark flex self-end pt-[45px]"
+          href={`/vote/demoday/result`}
+        >
+          현재 투표 순위 보러 가기 &gt;
+        </Link>
+
         {isModalOpen && selectedTeam && (
           <VoteModal
             target={selectedTeam}

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { teamList } from "@/constants/signup/teamLists";
+import { teamList } from "@/constants/teamLists";
 
 export const useTeamSelection = () => {
   const [selectedLabel, setSelectedLabel] = useState("Front-End");
