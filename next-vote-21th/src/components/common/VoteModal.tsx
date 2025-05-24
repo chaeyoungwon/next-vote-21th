@@ -1,9 +1,9 @@
-interface LoginModalProps {
+interface VoteModalProps {
   onClose: () => void;
   onConfirm: () => void;
 }
 
-const LoginModal = ({ onClose, onConfirm }: LoginModalProps) => {
+const VoteModal = ({ onClose, onConfirm }: VoteModalProps) => {
   return (
     <div
       className="fixed inset-0 z-100 flex items-center justify-center"
@@ -19,13 +19,13 @@ const LoginModal = ({ onClose, onConfirm }: LoginModalProps) => {
 
         <div className="text-heading2 h-[63px] w-full items-center justify-end">
           <button
-            className="bg-green hover:bg-green-dark h-full w-1/2 cursor-pointer"
+            className="h-full w-1/2 cursor-pointer bg-gray-300 text-gray-0 hover:bg-gray-700"
             onClick={onClose}
           >
             아니오
           </button>
           <button
-            className="h-full w-1/2 cursor-pointer bg-gray-300 hover:bg-gray-700"
+            className="bg-green hover:bg-green-dark h-full text-gray-0  w-1/2 cursor-pointer"
             onClick={onConfirm}
           >
             예
@@ -36,4 +36,4 @@ const LoginModal = ({ onClose, onConfirm }: LoginModalProps) => {
   );
 };
 
-export default LoginModal;
+export default VoteModal;
