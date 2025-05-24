@@ -80,7 +80,7 @@ const LeaderVotePage = () => {
 
       {/* 결과 페이지 이동 */}
       <Link
-        className="text-heading3 md:text-heading2 text-violet-pressed ml-[106px] pt-[45px] text-right max-md:ml-[-108px]"
+        className="text-heading3 md:text-heading2 text-violet-pressed ml-[106px] pt-[45px] text-right ml-[106px] max-md:ml-[561x]"
         href={`/vote/leader/${part}/result`}
       >
         현재 투표 순위 보러 가기 &gt;
