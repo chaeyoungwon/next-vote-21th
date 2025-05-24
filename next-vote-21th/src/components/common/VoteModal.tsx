@@ -19,13 +19,13 @@ const VoteModal = ({ onClose, onConfirm }: VoteModalProps) => {
 
         <div className="text-heading2 h-[63px] w-full items-center justify-end">
           <button
-            className="h-full w-1/2 cursor-pointer bg-gray-300 text-gray-0 hover:bg-gray-700"
+            className="text-gray-0 h-full w-1/2 cursor-pointer bg-gray-300 hover:bg-gray-700"
             onClick={onClose}
           >
             아니오
           </button>
           <button
-            className="bg-green hover:bg-green-dark h-full text-gray-0  w-1/2 cursor-pointer"
+            className="bg-green hover:bg-green-dark text-gray-0 h-full w-1/2 cursor-pointer"
             onClick={onConfirm}
           >
             예
