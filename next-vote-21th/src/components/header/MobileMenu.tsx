@@ -1,8 +1,11 @@
 import Link from "next/link";
 
+import { useEffect } from "react";
+
+import { useAuthStore } from "@/stores/useAuthStore";
 import clsx from "clsx";
 
-import { menuItems } from "@/constants/header/menuItems";
+import { getMenuItems } from "@/constants/header/menuItems";
 
 interface MobileMenuProps {
   onClose: () => void;
@@ -11,6 +14,13 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
+  const { isLoggedIn, clearAuth } = useAuthStore(); // 최신 상태 사용
+
+  const menuItems = getMenuItems(isLoggedIn, clearAuth);
+
+  const itemClass =
+    "text-violet-dark text-heading2 hover:border-violet-dark w-[174px] cursor-pointer border border-transparent py-[10px] pr-4 text-right";
+
   return (
     <div
       ref={menuRef}
@@ -21,7 +31,6 @@ const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
         isOpen ? "translate-x-0" : "translate-x-full",
       )}
     >
-      {/* 닫기 버튼 */}
       <button
         onClick={onClose}
         className="text-heading2 cursor-pointer pr-4 text-right text-black"
@@ -30,16 +39,24 @@ const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
         X
       </button>
 
-      {/* 메뉴 아이템들 */}
-      {menuItems.map(({ label, href }) => (
-        <Link
-          key={label}
-          href={href}
-          onClick={onClose}
-          className="text-violet-dark text-heading2 hover:border-violet-dark w-[174px] cursor-pointer border border-transparent py-[10px] pr-4 text-right"
-        >
-          {label}
-        </Link>
+      {menuItems.map(({ label, href, onClick }) => (
+        <li key={label}>
+          {href ? (
+            <Link href={href} onClick={onClose} className={itemClass}>
+              {label}
+            </Link>
+          ) : (
+            <button
+              onClick={() => {
+                onClick?.();
+                onClose();
+              }}
+              className={itemClass}
+            >
+              {label}
+            </button>
+          )}
+        </li>
       ))}
     </div>
   );

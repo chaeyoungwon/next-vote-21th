@@ -1,16 +1,42 @@
-export const teamList = {
-  "Front-End": {
-    하니홈: ["신수진", "원채영"],
-    인플루이: ["최서연", "한서정"],
-    이어드림: ["김영서", "이주희"],
-    팝업사이클: ["김철흥", "송아영"],
-    프로메사: ["권동욱", "김서연"],
+export const teamList = [
+  {
+    code: "HANI_HOME",
+    name: "하니홈",
+    members: {
+      FRONTEND: ["신수진", "원채영"],
+      BACKEND: ["이석원", "최근호"],
+    },
   },
-  "Back-End": {
-    하니홈: ["이석원", "최근호"],
-    인플루이: ["박서연", "박채연"],
-    이어드림: ["오지현", "한혜수"],
-    팝업사이클: ["김준형", "임도현"],
-    프로메사: ["박정하", "서채연"],
+  {
+    code: "INFLUY",
+    name: "인플루이",
+    members: {
+      FRONTEND: ["최서연", "한서정"],
+      BACKEND: ["박서연", "박채연"],
+    },
   },
-} as const;
+  {
+    code: "DEAR_DREAM",
+    name: "이어드림",
+    members: {
+      FRONTEND: ["김영서", "이주희"],
+      BACKEND: ["오지현", "한혜수"],
+    },
+  },
+  {
+    code: "POP_UPCYCLE",
+    name: "팝업사이클",
+    members: {
+      FRONTEND: ["김철흥", "송아영"],
+      BACKEND: ["김준형", "임도현"],
+    },
+  },
+  {
+    code: "PROMESA",
+    name: "프로메사",
+    members: {
+      FRONTEND: ["권동욱", "김서연"],
+      BACKEND: ["박정하", "서채연"],
+    },
+  },
+] as const;
