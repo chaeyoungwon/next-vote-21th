@@ -8,6 +8,7 @@ import LoginModal from "@/components/common/LoginModal";
 import BackgroundShapes from "@/components/home/BackgroundShape";
 import VoteCategoryList from "@/components/home/VoteCategoryList";
 
+
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isLoggedIn = false;
