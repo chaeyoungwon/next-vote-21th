@@ -10,21 +10,16 @@ import { useDuplicateChecker } from "@/hooks/useDuplicateChecker";
 import { useSignupForm } from "@/hooks/useSignUpForm";
 import { useTeamSelection } from "@/hooks/useTeamSelection";
 
-import InputField from "@/components/common/InputField";
 import SignUpModal from "@/components/common/SignUpModal";
 import PartSelector from "@/components/signup/PartSelector";
 import SignupFormFields from "@/components/signup/SignUpFormFields";
 import TeamSelector from "@/components/signup/TeamSelector";
 
 const SignUpPage = () => {
+  const router = useRouter();
+
   const { form, setForm, errors, setErrors, isDisabled, validate } =
     useSignupForm();
-
-  const [statuses, setStatuses] = useState({
-    id: undefined as "error" | "success" | undefined,
-    email: undefined as "error" | "success" | undefined,
-  });
-  const router = useRouter();
 
   const {
     selectedLabel,
@@ -38,6 +33,13 @@ const SignUpPage = () => {
     teams,
     members,
   } = useTeamSelection();
+
+  const [statuses, setStatuses] = useState({
+    id: undefined as "error" | "success" | undefined,
+    email: undefined as "error" | "success" | undefined,
+  });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleInputChange =
     (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +67,7 @@ const SignUpPage = () => {
 
     const result = await signup(payload);
     if (result) {
-      router.push("/login");
+      setIsModalOpen(true);
     }
   };
 
@@ -137,6 +139,7 @@ const SignUpPage = () => {
             가입하기
           </button>
         </form>
+
         {isModalOpen && (
           <SignUpModal
             onConfirm={() => {
