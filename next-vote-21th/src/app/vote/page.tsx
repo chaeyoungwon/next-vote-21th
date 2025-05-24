@@ -17,9 +17,9 @@ const VotePage = () => {
   };
 
   return (
-    <div className="mt-25 flex min-h-screen w-screen flex-col md:items-center items-start md: pl-0 pl-[31px] md:mt-16 md:justify-center">
+    <div className="md: mt-25 flex min-h-screen w-screen flex-col items-start pl-0 pl-[31px] md:mt-16 md:items-center md:justify-center">
       <BackgroundShapes />
-      <div className="text-left text-heading3">VOTE</div>
+      <div className="text-heading3 text-left">VOTE</div>
       <div className="flex flex-col gap-5 pt-[27px]">
         <div className="text-violet-pressed text-heading1">파트장 투표</div>
         <button

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { menuItems } from "@/constants/header/menuItems";
 
-interface DesktoMenuProps{
+interface DesktoMenuProps {
   isLoggedIn: boolean;
   onLoginRequired: () => void;
 }
-const DesktopMenu = ({isLoggedIn,   onLoginRequired}: DesktoMenuProps) => {
+const DesktopMenu = ({ isLoggedIn, onLoginRequired }: DesktoMenuProps) => {
   const pathname = usePathname();
   return (
     <ul className="hidden gap-9 pr-[29px] min-md:flex">
@@ -17,7 +18,7 @@ const DesktopMenu = ({isLoggedIn,   onLoginRequired}: DesktoMenuProps) => {
             e.preventDefault(); // 기본 링크 이동 막기
             onLoginRequired(); // 로그인 모달 오픈
           }
-        }
+        };
 
         return (
           <li
@@ -26,7 +27,9 @@ const DesktopMenu = ({isLoggedIn,   onLoginRequired}: DesktoMenuProps) => {
               isActive ? "font-semibold underline" : ""
             }`}
           >
-            <Link href={href} onClick={handleClick}>{label}</Link>
+            <Link href={href} onClick={handleClick}>
+              {label}
+            </Link>
           </li>
         );
       })}

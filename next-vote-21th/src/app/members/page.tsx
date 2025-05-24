@@ -19,7 +19,7 @@ const MembersPage = () => {
       </div>
 
       {/* 파트 버튼 */}
-      <div className="border-green border-solid flex h-[44px] w-[314px] overflow-hidden rounded-[20px] border md:w-[388px]">
+      <div className="border-green flex h-[44px] w-[314px] overflow-hidden rounded-[20px] border border-solid md:w-[388px]">
         {parts.map(part => (
           <button
             key={part}
