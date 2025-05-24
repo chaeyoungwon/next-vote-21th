@@ -3,20 +3,19 @@ import {
   checkUsernameDuplicate,
 } from "@/apis/checkDuplicate";
 
-type DuplicateType = "id" | "email";
-type Status = "error" | "success" | undefined;
-type ErrorOrStatusMap = Record<DuplicateType, string | Status | undefined>;
+import { SignupErrors } from "@/types/signup/dto";
 
-export const useDuplicateChecker = () => {
-  const check = async (
-    type: DuplicateType,
-    value: string,
-    setErrors: (fn: (prev: ErrorOrStatusMap) => ErrorOrStatusMap) => void,
-    setStatuses: (fn: (prev: ErrorOrStatusMap) => ErrorOrStatusMap) => void,
-  ) => {
+type Status = "error" | "success" | undefined;
+
+export const useDuplicateChecker = (
+  setErrors: React.Dispatch<React.SetStateAction<SignupErrors>>,
+  setStatuses: React.Dispatch<
+    React.SetStateAction<{ id: Status; email: Status }>
+  >,
+) => {
+  const check = async (type: "id" | "email", value: string) => {
     const checkFn =
       type === "id" ? checkUsernameDuplicate : checkEmailDuplicate;
-
     const { isDuplicate, message } = await checkFn(value);
 
     setErrors(prev => ({

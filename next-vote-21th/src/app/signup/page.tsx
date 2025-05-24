@@ -37,8 +37,6 @@ const SignUpPage = () => {
     members,
   } = useTeamSelection();
 
-  const { check } = useDuplicateChecker();
-
   const handleInputChange =
     (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setForm(prev => ({ ...prev, [key]: e.target.value }));
@@ -68,6 +66,8 @@ const SignUpPage = () => {
       router.push("/login");
     }
   };
+
+  const { check } = useDuplicateChecker(setErrors, setStatuses);
 
   const isSubmitDisabled =
     isDisabled ||
