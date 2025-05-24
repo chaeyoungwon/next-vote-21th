@@ -14,10 +14,12 @@ const MembersPage = () => {
   const entries = Object.entries(memberData);
   return (
     <div className="scrollbar-hide mt-16 flex min-h-screen w-screen flex-col items-center justify-center overflow-hidden">
-      <div className="text-heading1 text-green-dark pb-[15px] md:pb-[27px]">Members</div>
+      <div className="text-heading1 text-green-dark pb-[15px] md:pb-[27px]">
+        Members
+      </div>
 
       {/* 파트 버튼 */}
-      <div className="border-green flex h-[44px] md:w-[388px] w-[314px] overflow-hidden rounded-[20px] border">
+      <div className="border-green border-solid flex h-[44px] w-[314px] overflow-hidden rounded-[20px] border md:w-[388px]">
         {parts.map(part => (
           <button
             key={part}
@@ -30,16 +32,20 @@ const MembersPage = () => {
       </div>
 
       {/*멤버 데이터*/}
-      <div className="grid grid-cols-2 gap-x-[19px] md:gap-x-[26px] gap-y-[16px] md:gap-y-[21px] pt-[25px] md:pt-[22px]">
+      <div className="grid grid-cols-2 gap-x-[19px] gap-y-[16px] pt-[25px] md:gap-x-[26px] md:gap-y-[21px] md:pt-[22px]">
         {entries.map(([name, { college }]) => (
           <div
             key={name}
-            className="border-green flex  h-[50px] md:h-[62px]  w-[130px] md:w-[200px] flex-row items-center md:gap-[12.15px] gap-[8px] rounded-[8px] border px-[9px] md:px-[15px]"
+            className="border-green flex h-[50px] w-[130px] flex-row items-center gap-[8px] rounded-[8px] border border-solid bg-gray-100 px-[9px] md:h-[62px] md:w-[200px] md:gap-[12.15px] md:px-[15px]"
           >
-            <Profile className=" md:h-[50px] h-[36px] md:w-[50px] w-[36px]" />
+            <Profile className="h-[36px] w-[36px] md:h-[50px] md:w-[50px]" />
             <div className="flex flex-col gap-y-[2px] md:gap-y-[4px]">
-              <div className="md:text-lab1-b text-[10px] text-gray-800">{name}</div>
-              <div className="md:text-cap1-b text-[10px] text-green-dark">{college}</div>
+              <div className="md:text-lab1-b text-[10px] text-gray-800">
+                {name}
+              </div>
+              <div className="md:text-cap1-b text-green-dark text-[10px]">
+                {college}
+              </div>
             </div>
           </div>
         ))}
