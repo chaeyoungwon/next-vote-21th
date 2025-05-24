@@ -9,7 +9,7 @@ import VoteModal from "@/components/common/VoteModal";
 import { teamList } from "@/constants/signup/teamLists";
 
 const DemodayVotePage = () => {
-  const teamNames = Object.keys(teamList["Front-End"]);
+  const teamNames = teamList.map(team => team.name);
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
