@@ -4,10 +4,7 @@ interface SignUpModalProp {
 
 const SignUpModal = ({ onConfirm }: SignUpModalProp) => {
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-center justify-center"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
-    >
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60">
       <div className="flex h-[280px] w-[320px] flex-col overflow-hidden rounded-3xl bg-white md:h-[320px] md:w-[400px]">
         <div className="text-heading2 flex h-[217px] items-center justify-center md:h-[257px]">
           회원가입이 완료 되었습니다.
