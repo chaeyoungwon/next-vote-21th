@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useEffect, useRef, useState } from "react";
+
+import LoginModal from "@/components/common/LoginModal";
 
 import HamburgerMenu from "@/public/svgs/header/hamburgerMenu.svg";
 import Logo from "@/public/svgs/header/logo.svg";
@@ -12,7 +15,10 @@ import MobileMenu from "./MobileMenu";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,12 +49,26 @@ const Header = () => {
         <HamburgerMenu />
       </button>
 
-      <DesktopMenu />
+      <DesktopMenu
+        isLoggedIn={isLoggedIn}
+        onLoginRequired={() => setIsModalOpen(true)}
+      />
       <MobileMenu
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         menuRef={menuRef}
+        isLoggedIn={isLoggedIn}
+        onLoginRequired={() => setIsModalOpen(true)}
       />
+      {isModalOpen && (
+        <LoginModal
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={() => {
+            setIsModalOpen(false);
+            router.push("/login");
+          }}
+        />
+      )}
     </nav>
   );
 };

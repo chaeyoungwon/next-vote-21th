@@ -3,17 +3,23 @@ import Link from "next/link";
 import { useAuthStore } from "@/stores/useAuthStore";
 import clsx from "clsx";
 
-import { getMenuItems } from "@/constants/header/menuItems";
+import { getMenuItems } from "@/constants/menuItems";
 
 interface MobileMenuProps {
   onClose: () => void;
   menuRef: React.RefObject<HTMLDivElement | null>;
   isOpen: boolean;
+  isLoggedIn: boolean;
+  onLoginRequired: () => void;
 }
 
-const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
-  const { isLoggedIn, clearAuth } = useAuthStore(); // 최신 상태 사용
-
+const MobileMenu = ({
+  onClose,
+  menuRef,
+  isOpen,
+  onLoginRequired,
+}: MobileMenuProps) => {
+  const { isLoggedIn, clearAuth } = useAuthStore();
   const menuItems = getMenuItems(isLoggedIn, clearAuth);
 
   const itemClass =
@@ -37,25 +43,34 @@ const MobileMenu = ({ onClose, menuRef, isOpen }: MobileMenuProps) => {
         X
       </button>
 
-      {menuItems.map(({ label, href, onClick }) => (
-        <li key={label}>
-          {href ? (
-            <Link href={href} onClick={onClose} className={itemClass}>
-              {label}
-            </Link>
-          ) : (
-            <button
-              onClick={() => {
-                onClick?.();
-                onClose();
-              }}
-              className={itemClass}
-            >
-              {label}
-            </button>
-          )}
-        </li>
-      ))}
+      <ul className="flex flex-col gap-4">
+        {menuItems.map(({ label, href, onClick }) => {
+          const handleClick = (e: React.MouseEvent) => {
+            if (label === "Vote" && !isLoggedIn) {
+              e.preventDefault();
+              onLoginRequired();
+              return;
+            }
+
+            onClick?.();
+            onClose();
+          };
+
+          return (
+            <li key={label}>
+              {href ? (
+                <Link href={href} onClick={handleClick} className={itemClass}>
+                  {label}
+                </Link>
+              ) : (
+                <button onClick={handleClick} className={itemClass}>
+                  {label}
+                </button>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
