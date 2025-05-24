@@ -24,7 +24,6 @@ const titleMap: Record<Part, string> = {
 
 const LeaderVotePage = () => {
   const params = useParams();
-
   const part = params.part as Part;
 
   const title = titleMap[part];
@@ -43,6 +42,7 @@ const LeaderVotePage = () => {
   return (
     <div className="relative flex min-h-screen w-screen flex-col items-center justify-center overflow-hidden">
       <BackgroundShapes />
+
       {/* 헤더 + 투표하기 버튼 */}
       <div className="flex flex-row gap-[47px] pb-7">
         <div className="text-heading3 md:text-heading1 text-violet-pressed">
@@ -51,7 +51,7 @@ const LeaderVotePage = () => {
         <button
           onClick={handleVote}
           disabled={!selectedCandidate}
-          className={`underline ${
+          className={`text-lab1-sb underline ${
             selectedCandidate
               ? "cursor-pointer text-black"
               : "cursor-not-allowed text-gray-700"
@@ -67,7 +67,7 @@ const LeaderVotePage = () => {
           <button
             key={name}
             onClick={() => setSelectedCandidate(name)}
-            className={`text-heading3 border-violet-pressed h-[50px] w-[120px] cursor-pointer rounded-[24px] border md:h-[50px] md:w-[120px]${
+            className={`text-heading3 border-violet-pressed h-[41px] w-[114px] cursor-pointer rounded-[24px] border md:h-[50px] md:w-[120px] ${
               selectedCandidate === name
                 ? "bg-violet-pressed text-white"
                 : "bg-violet-light text-violet-pressed hover:bg-violet-pressed hover:text-white"
@@ -78,6 +78,7 @@ const LeaderVotePage = () => {
         ))}
       </div>
 
+      {/* 결과 페이지 이동 */}
       <Link
         className="text-heading3 md:text-heading2 text-violet-pressed ml-[106px] pt-[45px] text-right max-md:ml-[-108px]"
         href={`/vote/leader/${part}/result`}
