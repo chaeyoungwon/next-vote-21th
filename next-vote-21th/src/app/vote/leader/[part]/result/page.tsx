@@ -1,9 +1,11 @@
+import { use } from "react";
+
 interface PageProps {
-  params: { part: string }; // 실제로는 이걸 유지
+  params: Promise<{ part: string }>;
 }
 
 const LeaderVoteResult = ({ params }: PageProps) => {
-  const { part } = params;
+  const { part } = use(params);
 
   return (
     <div className="mt-16 flex min-h-screen w-screen flex-col items-center justify-center">

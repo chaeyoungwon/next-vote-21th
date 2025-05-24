@@ -33,15 +33,20 @@ const DemodayVotePage = () => {
             <div className="text-heading3 md:text-heading1 text-green-dark">
               21th CEOS PROJECT
             </div>
-            <span
+            <button
               onClick={() => !hasVoted && setIsModalOpen(true)}
+              disabled={!selectedTeam || hasVoted}
               className={clsx(
                 "text-lab1-b md:text-body1-sb cursor-pointer underline transition-opacity duration-200",
-                hasVoted && "pointer-events-none opacity-0",
+                hasVoted
+                  ? "pointer-events-none opacity-0"
+                  : selectedTeam
+                    ? "cursor-pointer text-black"
+                    : "cursor-not-allowed text-gray-700",
               )}
             >
               투표하기
-            </span>
+            </button>
           </div>
         </div>
 

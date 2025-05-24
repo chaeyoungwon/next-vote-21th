@@ -32,11 +32,13 @@ const LeaderVotePage = () => {
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(
     null,
   );
+  const [hasVoted, setHasVoted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleVote = () => {
-    if (!selectedCandidate) return;
-    setIsModalOpen(true);
+  const handleVote = (candidate: string | null) => {
+    if (!candidate) return;
+    setHasVoted(true);
+    setIsModalOpen(false);
   };
 
   return (
@@ -44,23 +46,24 @@ const LeaderVotePage = () => {
       <BackgroundShapes />
 
       {/* 헤더 + 투표하기 버튼 */}
-      <div className="flex flex-row gap-[47px] pb-7">
+      <div className="flex flex-row justify-center gap-[47px] pb-7">
         <div className="text-heading3 md:text-heading1 text-violet-pressed">
           {title}
         </div>
         <button
-          onClick={handleVote}
-          disabled={!selectedCandidate}
-          className={`text-lab1-sb underline ${
-            selectedCandidate
-              ? "cursor-pointer text-black"
-              : "cursor-not-allowed text-gray-700"
+          onClick={() => !hasVoted && setIsModalOpen(true)}
+          disabled={!selectedCandidate || hasVoted}
+          className={`text-lab1-sb underline transition-opacity duration-200 ${
+            hasVoted
+              ? "pointer-events-none opacity-0"
+              : selectedCandidate
+                ? "cursor-pointer text-black"
+                : "cursor-not-allowed text-gray-700"
           }`}
         >
           투표하기
         </button>
       </div>
-
       {/* 후보 목록 */}
       <div className="grid grid-cols-2 gap-x-[21px] gap-y-[7px]">
         {candidates.map(name => (
@@ -80,7 +83,7 @@ const LeaderVotePage = () => {
 
       {/* 결과 페이지 이동 */}
       <Link
-        className="text-heading3 md:text-heading2 text-violet-pressed ml-[106px] pt-[45px] text-right ml-[106px] max-md:ml-[561x]"
+        className="text-heading3 md:text-heading2 text-violet-pressed ml-[106px] pt-[45px] text-right max-md:ml-[561x]"
         href={`/vote/leader/${part}/result`}
       >
         현재 투표 순위 보러 가기 &gt;
@@ -92,7 +95,7 @@ const LeaderVotePage = () => {
           target={selectedCandidate}
           targetType="파트장"
           onConfirm={() => {
-            setIsModalOpen(false);
+            handleVote(selectedCandidate);
             // TODO: 실제 투표 API 호출 예정
           }}
           onClose={() => setIsModalOpen(false)}
