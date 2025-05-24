@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/stores/useAuthStore";
+import { AxiosError } from "axios";
 
 import { axiosInstance } from "./axios";
 
@@ -30,8 +31,9 @@ export const login = async (
     }
 
     return { token: accessToken };
-  } catch (err: any) {
-    if (err.response?.status === 401) {
+  } catch (err: unknown) {
+    const error = err as AxiosError;
+    if (error.response?.status === 401) {
       return {
         token: null,
         errorMessage: "아이디 또는 비밀번호가 일치하지 않습니다.",

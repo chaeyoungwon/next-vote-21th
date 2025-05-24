@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-import { useEffect } from "react";
-
 import { useAuthStore } from "@/stores/useAuthStore";
 import clsx from "clsx";
 
