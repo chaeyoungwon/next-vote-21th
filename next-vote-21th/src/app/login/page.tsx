@@ -1,8 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useState } from "react";
+
+import { useAuthStore } from "@/stores/useAuthStore";
+
+import { login } from "@/apis/auth";
 
 import InputField from "@/components/common/InputField";
 
@@ -12,15 +17,21 @@ const LoginPage = () => {
     password: "",
   });
 
-  const [idError, setIdError] = useState("");
-  const [pwError, setPwError] = useState("");
+  const [loginError, setLoginError] = useState("");
 
-  const handleLogin = () => {
-    const isIdValid = form.id === "admin"; // 예시
-    const isPwValid = form.password === "1234"; // 예시
+  const router = useRouter();
+  const setAccessToken = useAuthStore(state => state.setAccessToken);
 
-    setIdError(isIdValid ? "" : "존재하지 않는 아이디입니다.");
-    setPwError(isPwValid ? "" : "비밀번호가 일치하지 않습니다.");
+  const handleLogin = async () => {
+    setLoginError("");
+    const { token, errorMessage } = await login(form.id, form.password);
+
+    if (token) {
+      setAccessToken(token);
+      router.push("/");
+    } else if (errorMessage) {
+      setLoginError(errorMessage);
+    }
   };
 
   return (
@@ -32,8 +43,8 @@ const LoginPage = () => {
 
         <form
           onSubmit={e => {
-            e.preventDefault(); // 새로고침 방지
-            handleLogin(); // 로그인 로직 실행
+            e.preventDefault();
+            handleLogin();
           }}
           className="flex w-full flex-col"
         >
@@ -43,23 +54,23 @@ const LoginPage = () => {
               placeholder="아이디를 입력해주세요."
               value={form.id}
               onChange={e => setForm({ ...form, id: e.target.value })}
-              error={idError}
               autoComplete="username"
             />
+
             <InputField
               label="비밀번호"
               type="password"
               placeholder="비밀번호를 입력해주세요."
               value={form.password}
               onChange={e => setForm({ ...form, password: e.target.value })}
-              error={pwError}
               autoComplete="current-password"
+              error={loginError}
             />
           </div>
 
           <button
-            className="bg-green text-heading3 md:heading2 mt-[30px] h-fit w-full cursor-pointer rounded-[20px] py-[10px] text-white focus:outline-none md:mt-[44px]"
-            onClick={handleLogin}
+            type="submit"
+            className="bg-green hover:bg-green-dark text-heading3 md:heading2 mt-[30px] h-fit w-full cursor-pointer rounded-[20px] py-[10px] text-white focus:outline-none md:mt-[44px]"
           >
             로그인하기
           </button>

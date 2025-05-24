@@ -1,16 +1,17 @@
-type Part = "frontend" | "backend";
-
-interface LeaderPageProps {
-  params: { part: Part };
+interface PageProps {
+  params: { part: string }; // 실제로는 이걸 유지
 }
 
-const LeaderVoteResult = ({ params }: LeaderPageProps) => {
+const LeaderVoteResult = ({ params }: PageProps) => {
   const { part } = params;
-  console.log("파트장 투표 결과 로딩");
+
   return (
     <div className="mt-16 flex min-h-screen w-screen flex-col items-center justify-center">
-      {part}파트장 투표 결과 입니다
+      <div className="text-heading1 text-violet-pressed">
+        {part === "frontend" ? "프론트엔드" : "백엔드"} 파트장 투표 결과입니다.
+      </div>
     </div>
   );
 };
+
 export default LeaderVoteResult;

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import { useState } from "react";
 
@@ -24,46 +24,35 @@ const titleMap: Record<Part, string> = {
 
 const LeaderVotePage = () => {
   const params = useParams();
-  const router = useRouter();
 
   const part = params.part as Part;
-
-  // 예외 처리: part 값이 잘못된 경우
-  if (part !== "frontend" && part !== "backend") {
-    return <div>잘못된 경로입니다.</div>;
-  }
 
   const title = titleMap[part];
   const candidates = Object.keys(dataMap[part]);
 
-  const [isSelected, setIsSelected] = useState<string | null>(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<string | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleVote = () => {
-    if (!isSelected) return;
+    if (!selectedCandidate) return;
     setIsModalOpen(true);
-  };
-
-  const handleConfirm = () => {
-    setIsModalOpen(false);
-    // 투표 처리 로직 추가 가능
-    // 예시: 서버로 POST 요청 후 결과 페이지로 이동
-    router.push(`/vote/leader/${part}/result`);
   };
 
   return (
     <div className="relative flex min-h-screen w-screen flex-col items-center justify-center overflow-hidden">
       <BackgroundShapes />
-
+      {/* 헤더 + 투표하기 버튼 */}
       <div className="flex flex-row gap-[47px] pb-7">
         <div className="text-heading3 md:text-heading1 text-violet-pressed">
           {title}
         </div>
         <button
           onClick={handleVote}
-          disabled={!isSelected}
-          className={`text-lab1-sb underline ${
-            isSelected
+          disabled={!selectedCandidate}
+          className={`underline ${
+            selectedCandidate
               ? "cursor-pointer text-black"
               : "cursor-not-allowed text-gray-700"
           }`}
@@ -72,13 +61,14 @@ const LeaderVotePage = () => {
         </button>
       </div>
 
+      {/* 후보 목록 */}
       <div className="grid grid-cols-2 gap-x-[21px] gap-y-[7px]">
         {candidates.map(name => (
           <button
             key={name}
-            onClick={() => setIsSelected(name)}
-            className={`text-heading3 border-violet-pressed h-[41px] w-[114px] cursor-pointer rounded-[24px] border md:h-[50px] md:w-[120px] ${
-              isSelected === name
+            onClick={() => setSelectedCandidate(name)}
+            className={`text-heading3 border-violet-pressed h-[50px] w-[120px] cursor-pointer rounded-[24px] border md:h-[50px] md:w-[120px]${
+              selectedCandidate === name
                 ? "bg-violet-pressed text-white"
                 : "bg-violet-light text-violet-pressed hover:bg-violet-pressed hover:text-white"
             }`}
@@ -95,9 +85,15 @@ const LeaderVotePage = () => {
         현재 투표 순위 보러 가기 &gt;
       </Link>
 
-      {isModalOpen && (
+      {/* 투표 확인 모달 */}
+      {isModalOpen && selectedCandidate && (
         <VoteModal
-          onConfirm={handleConfirm}
+          target={selectedCandidate}
+          targetType="파트장"
+          onConfirm={() => {
+            setIsModalOpen(false);
+            // TODO: 실제 투표 API 호출 예정
+          }}
           onClose={() => setIsModalOpen(false)}
         />
       )}

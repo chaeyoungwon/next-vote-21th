@@ -12,7 +12,7 @@ const VotePage = () => {
 
   const handleClick = (part: Part) => {
     if (part === "demoday") {
-      router.push(`vote/${part}`);
+      router.push(`vote/demoday`);
     } else {
       router.push(`vote/leader/${part}`);
     }
