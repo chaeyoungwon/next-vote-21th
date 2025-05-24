@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 
 import { useEffect, useRef, useState } from "react";
 
+import LoginModal from "@/components/common/LoginModal";
+
 import HamburgerMenu from "@/public/svgs/header/hamburgerMenu.svg";
 import Logo from "@/public/svgs/header/logo.svg";
 
-import LoginModal from "../common/LoginModal";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 
