@@ -17,7 +17,7 @@ export const login = async (
   password: string,
 ): Promise<{ token: string | null; errorMessage?: string }> => {
   try {
-    const res = await axiosInstance.post("/auth/login", {
+    const res = await axiosInstance.post("/users/signin", {
       username: id,
       password,
     });
@@ -48,7 +48,7 @@ export const login = async (
 
 export const signup = async (payload: SignupPayload) => {
   try {
-    const res = await axiosInstance.post("/auth/signup", payload);
+    const res = await axiosInstance.post("/users/signup", payload);
     return res.data;
   } catch (error) {
     console.error("회원가입 실패:", error);
@@ -59,7 +59,7 @@ export const signup = async (payload: SignupPayload) => {
 
 export const logout = async () => {
   try {
-    await authInstance.post("/auth/logout");
+    await authInstance.post("/users/logout");
     useAuthStore.getState().clearAuth();
   } catch (error) {
     console.error("로그아웃 실패", error);

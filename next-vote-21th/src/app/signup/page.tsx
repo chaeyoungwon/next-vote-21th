@@ -87,12 +87,9 @@ const SignUpPage = () => {
     !watch("confirmPassword");
 
   const isSubmitDisabled =
-    hasEmpty ||
-    !positionKey ||
-    !selectedTeam ||
-    !selectedMember ||
-    statuses.id !== "success" ||
-    statuses.email !== "success";
+    hasEmpty || !positionKey || !selectedTeam || !selectedMember;
+  // statuses.id !== "success" ||
+  // statuses.email !== "success";
 
   return (
     <div className="scrollbar-hide flex min-h-screen w-screen flex-col items-center overflow-y-auto pt-[124px] pb-9 md:pt-[121px]">
