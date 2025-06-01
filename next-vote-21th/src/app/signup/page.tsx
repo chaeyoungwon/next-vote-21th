@@ -3,11 +3,14 @@
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { signupSchema } from "@/schemas/signupSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signup } from "@/apis/auth";
 
 import { useDuplicateChecker } from "@/hooks/useDuplicateChecker";
-import { useSignupForm } from "@/hooks/useSignUpForm";
 import { useTeamSelection } from "@/hooks/useTeamSelection";
 
 import SignUpModal from "@/components/common/SignUpModal";
@@ -15,11 +18,10 @@ import PartSelector from "@/components/signup/PartSelector";
 import SignupFormFields from "@/components/signup/SignUpFormFields";
 import TeamSelector from "@/components/signup/TeamSelector";
 
+import type { SignupForm } from "@/types/signup/dto";
+
 const SignUpPage = () => {
   const router = useRouter();
-
-  const { form, setForm, errors, setErrors, isDisabled, validate } =
-    useSignupForm();
 
   const {
     selectedLabel,
@@ -34,27 +36,36 @@ const SignUpPage = () => {
     members,
   } = useTeamSelection();
 
-  const [statuses, setStatuses] = useState({
-    id: undefined as "error" | "success" | undefined,
-    email: undefined as "error" | "success" | undefined,
+  const [statuses, setStatuses] = useState<{
+    id: "error" | "success" | undefined;
+    email: "error" | "success" | undefined;
+  }>({
+    id: undefined,
+    email: undefined,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleInputChange =
-    (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm(prev => ({ ...prev, [key]: e.target.value }));
-      if (errors[key]) setErrors(prev => ({ ...prev, [key]: "" }));
-    };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<SignupForm>({
+    resolver: zodResolver(signupSchema),
+    mode: "onBlur",
+  });
 
-  useEffect(() => {
-    const hasSelects = !positionKey || !selectedTeam || !selectedMember;
-    setErrors(prev => ({ ...prev, disabled: hasSelects ? "true" : "" }));
-  }, [positionKey, selectedTeam, selectedMember]);
+  const { check } = useDuplicateChecker<SignupForm>({
+    setError,
+    clearErrors,
+    setStatuses,
+  });
 
-  const handleSubmit = async () => {
-    const isValid = validate();
-    if (!isValid || !positionKey || !selectedTeam || !selectedMember) return;
+  const onSubmit = async (form: SignupForm) => {
+    if (!positionKey || !selectedTeam || !selectedMember) return;
 
     const payload = {
       name: selectedMember,
@@ -66,15 +77,17 @@ const SignUpPage = () => {
     };
 
     const result = await signup(payload);
-    if (result) {
-      setIsModalOpen(true);
-    }
+    if (result) setIsModalOpen(true);
   };
 
-  const { check } = useDuplicateChecker(setErrors, setStatuses);
+  const hasEmpty =
+    !watch("id") ||
+    !watch("email") ||
+    !watch("password") ||
+    !watch("confirmPassword");
 
   const isSubmitDisabled =
-    isDisabled ||
+    hasEmpty ||
     !positionKey ||
     !selectedTeam ||
     !selectedMember ||
@@ -112,20 +125,14 @@ const SignUpPage = () => {
         </div>
 
         <form
-          onSubmit={e => {
-            e.preventDefault();
-            handleSubmit();
-          }}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex w-[313px] flex-col"
         >
           <SignupFormFields
-            form={form}
+            register={register}
             errors={errors}
+            watch={watch}
             statuses={statuses}
-            setStatuses={setStatuses}
-            setForm={setForm}
-            setErrors={setErrors}
-            handleInputChange={handleInputChange}
             check={check}
           />
 
