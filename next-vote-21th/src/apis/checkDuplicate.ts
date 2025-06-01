@@ -9,7 +9,7 @@ export const checkUsernameDuplicate = async (
   username: string,
 ): Promise<DuplicateCheckResult> => {
   try {
-    const res = await axiosInstance.get("/api/v1/auth/signup/username/exists", {
+    const res = await axiosInstance.get("/auth/signup/username/exists", {
       params: { username },
     });
     const isDup = res.data.data.isDuplicate === "true";
@@ -32,7 +32,7 @@ export const checkEmailDuplicate = async (
   email: string,
 ): Promise<DuplicateCheckResult> => {
   try {
-    const res = await axiosInstance.get("/api/v1/auth/signup/email/exists", {
+    const res = await axiosInstance.get("/auth/signup/email/exists", {
       params: { email },
     });
     const isDup = res.data.data.isDuplicate === "true";

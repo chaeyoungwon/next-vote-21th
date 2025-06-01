@@ -6,11 +6,18 @@ export const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+export const authInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
   withCredentials: true, // refreshToken 쿠키 받기 허용
 });
 
 // 요청 인터셉터: accessToken을 Zustand에서 가져와 주입
-axiosInstance.interceptors.request.use(
+authInstance.interceptors.request.use(
   config => {
     const token = useAuthStore.getState().accessToken;
     if (token) {
@@ -22,7 +29,7 @@ axiosInstance.interceptors.request.use(
 );
 
 // 응답 인터셉터: 새 accessToken이 있으면 Zustand에 저장
-axiosInstance.interceptors.response.use(
+authInstance.interceptors.response.use(
   response => {
     const authHeader = response.headers["authorization"];
     if (authHeader?.startsWith("Bearer ")) {

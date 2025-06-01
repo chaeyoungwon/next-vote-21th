@@ -10,6 +10,7 @@
     "format": "prettier --write --cache ."
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@svgr/webpack": "^8.1.0",
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
@@ -17,7 +18,8 @@
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "zod": "^3.25.23",
+    "react-hook-form": "^7.56.4",
+    "zod": "^3.25.46",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

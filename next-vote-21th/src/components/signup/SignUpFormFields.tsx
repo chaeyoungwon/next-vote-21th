@@ -1,85 +1,51 @@
-"use client";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-import InputField from "@/components/common/InputField";
+import type { SignupForm } from "@/types/signup/dto";
 
-import type { SignupErrors, SignupForm } from "@/types/signup/dto";
+import InputField from "../common/InputField";
 
 interface SignupFormFieldsProps {
-  form: SignupForm;
-  errors: SignupErrors;
+  register: UseFormRegister<SignupForm>;
+  errors: FieldErrors<SignupForm>;
+  watch: (name: keyof SignupForm) => string;
   statuses: Record<"id" | "email", "error" | "success" | undefined>;
-  handleInputChange: (
-    key: keyof SignupForm,
-  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-  setForm: React.Dispatch<React.SetStateAction<SignupForm>>;
-  setErrors: React.Dispatch<React.SetStateAction<SignupErrors>>;
-  setStatuses: React.Dispatch<
-    React.SetStateAction<
-      Record<"id" | "email", "error" | "success" | undefined>
-    >
-  >;
-  check: (
-    type: "id" | "email",
-    value: string,
-    setErrors: React.Dispatch<React.SetStateAction<SignupErrors>>,
-    setStatuses: React.Dispatch<
-      React.SetStateAction<
-        Record<"id" | "email", "error" | "success" | undefined>
-      >
-    >,
-  ) => void;
+  check: (type: "id" | "email", value: string) => void;
 }
 
 const SignupFormFields = ({
-  form,
+  register,
   errors,
+  watch,
   statuses,
-  handleInputChange,
-  setForm,
-  setErrors,
-  setStatuses,
   check,
 }: SignupFormFieldsProps) => {
   return (
     <div className="mb-6 flex flex-col gap-[10px]">
-      <InputField
-        label="아이디 *"
-        placeholder="6~20자 이내로 입력해주세요."
-        value={form.id}
-        onChange={handleInputChange("id")}
-        onCheckDuplicate={() => check("id", form.id, setErrors, setStatuses)}
-        showCheckButton
-        error={errors.id}
-        status={statuses.id}
-      />
-
-      <InputField
-        label="이메일 *"
-        placeholder="이메일을 입력해주세요."
-        value={form.email}
-        autoComplete="email"
-        onChange={handleInputChange("email")}
-        onCheckDuplicate={() =>
-          check("email", form.email, setErrors, setStatuses)
-        }
-        showCheckButton
-        error={errors.email}
-        status={statuses.email}
-      />
+      {(["id", "email"] as const).map(field => (
+        <InputField
+          key={field}
+          label={`${field === "id" ? "아이디 *" : "이메일 *"}`}
+          placeholder={
+            field === "id"
+              ? "6~20자 이내로 입력해주세요."
+              : "이메일을 입력해주세요."
+          }
+          {...register(field)}
+          onCheckDuplicate={() => check(field, watch(field))}
+          showCheckButton
+          error={errors[field]?.message}
+          status={statuses[field]}
+          autoComplete={field === "email" ? "email" : undefined}
+        />
+      ))}
 
       <InputField
         label="비밀번호 *"
         type="password"
         autoComplete="new-password"
         placeholder="문자, 숫자, 특수문자 포함 8~20자"
-        value={form.password}
-        onChange={e => {
-          setForm({ ...form, password: e.target.value });
-
-          if (errors.password)
-            setErrors((prev: SignupErrors) => ({ ...prev, password: "" }));
-        }}
-        error={errors.password}
+        {...register("password")}
+        error={errors.password?.message}
       />
 
       <InputField
@@ -87,17 +53,8 @@ const SignupFormFields = ({
         type="password"
         autoComplete="new-password"
         placeholder="비밀번호 재입력"
-        value={form.confirmPassword}
-        onChange={e => {
-          setForm({ ...form, confirmPassword: e.target.value });
-
-          if (errors.confirmPassword)
-            setErrors((prev: SignupErrors) => ({
-              ...prev,
-              confirmPassword: "",
-            }));
-        }}
-        error={errors.confirmPassword}
+        {...register("confirmPassword")}
+        error={errors.confirmPassword?.message}
       />
     </div>
   );

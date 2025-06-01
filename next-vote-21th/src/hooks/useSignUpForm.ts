@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
-import { signupSchema } from "@/schemas/signupSchema";
+import { SignupInput, signupSchema } from "@/schemas/signupSchema";
 
-import { SignupErrors, SignupForm } from "@/types/signup/dto";
+import { SignupErrors } from "@/types/signup/dto";
 
-const initialForm: SignupForm = {
+const initialForm: SignupInput = {
   id: "",
   email: "",
   password: "",
@@ -19,26 +19,19 @@ const initialErrors: SignupErrors = {
 };
 
 export const useSignupForm = () => {
-  const [form, setForm] = useState<SignupForm>(initialForm);
+  const [form, setForm] = useState<SignupInput>(initialForm);
   const [errors, setErrors] = useState<SignupErrors>(initialErrors);
-  const [isDisabled, setIsDisabled] = useState(true);
-
-  const applyValidationErrors = (zodErrors: SignupErrors) => {
-    setErrors(zodErrors);
-  };
 
   const validate = () => {
     const result = signupSchema.safeParse(form);
 
     if (!result.success) {
-      const newErrors: SignupErrors = { ...initialErrors };
-
+      const newErrors = { ...initialErrors };
       result.error.errors.forEach(({ path, message }) => {
         const field = path[0] as keyof SignupErrors;
         newErrors[field] = message;
       });
-
-      applyValidationErrors(newErrors);
+      setErrors(newErrors);
       return false;
     }
 
@@ -46,10 +39,11 @@ export const useSignupForm = () => {
     return true;
   };
 
-  useEffect(() => {
-    const hasError = Object.values(errors).some(Boolean);
-    const hasEmpty = Object.values(form).some(val => val === "");
-    setIsDisabled(hasError || hasEmpty);
+  const isDisabled = useMemo(() => {
+    return (
+      Object.values(form).some(val => val === "") ||
+      Object.values(errors).some(Boolean)
+    );
   }, [form, errors]);
 
   return {
@@ -57,7 +51,7 @@ export const useSignupForm = () => {
     setForm,
     errors,
     setErrors,
-    isDisabled,
     validate,
+    isDisabled,
   };
 };

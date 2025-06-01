@@ -10,7 +10,6 @@ const suit = localFont({
   display: "swap",
   style: "normal",
   weight: "45 920",
-  variable: "--font-suit",
 });
 
 export const metadata: Metadata = {

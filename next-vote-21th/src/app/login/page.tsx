@@ -17,6 +17,12 @@ const LoginPage = () => {
     password: "",
   });
 
+  type FormKey = keyof typeof form; // 'id' | 'password'
+
+  const handleInputFieldChange = (key: FormKey, value: string) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+  };
+
   const [loginError, setLoginError] = useState("");
 
   const router = useRouter();
@@ -53,7 +59,7 @@ const LoginPage = () => {
               label="아이디"
               placeholder="아이디를 입력해주세요."
               value={form.id}
-              onChange={e => setForm({ ...form, id: e.target.value })}
+              onChange={e => handleInputFieldChange("id", e.target.value)}
               autoComplete="username"
             />
 
@@ -62,7 +68,7 @@ const LoginPage = () => {
               type="password"
               placeholder="비밀번호를 입력해주세요."
               value={form.password}
-              onChange={e => setForm({ ...form, password: e.target.value })}
+              onChange={e => handleInputFieldChange("password", e.target.value)}
               autoComplete="current-password"
               error={loginError}
             />
