@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
@@ -17,10 +16,7 @@ const LoginPage = () => {
     password: "",
   });
 
-  const [loginError, setLoginError] = useState("");
-
-  const { login, isLoginLoading, loginError: authError } = useAuth();
-  const router = useRouter();
+  const { login, isLoginLoading } = useAuth();
 
   const handleInputFieldChange = (key: keyof LoginPayload, value: string) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -55,7 +51,6 @@ const LoginPage = () => {
             value={form.password}
             onChange={e => handleInputFieldChange("password", e.target.value)}
             autoComplete="current-password"
-            error={loginError || (authError as Error)?.message}
           />
           <button
             type="submit"
