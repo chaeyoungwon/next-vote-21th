@@ -8,8 +8,8 @@ interface SignupFormFieldsProps {
   register: UseFormRegister<SignupForm>;
   errors: FieldErrors<SignupForm>;
   watch: (name: keyof SignupForm) => string;
-  statuses: Record<"id" | "email", "error" | "success" | undefined>;
-  check: (type: "id" | "email", value: string) => void;
+  statuses: Record<"username" | "email", "error" | "success" | undefined>;
+  check: (type: "username" | "email", value: string) => void;
 }
 
 const SignupFormFields = ({
@@ -21,12 +21,12 @@ const SignupFormFields = ({
 }: SignupFormFieldsProps) => {
   return (
     <div className="mb-6 flex flex-col gap-[10px]">
-      {(["id", "email"] as const).map(field => (
+      {(["username", "email"] as const).map(field => (
         <InputField
           key={field}
-          label={`${field === "id" ? "아이디 *" : "이메일 *"}`}
+          label={`${field === "username" ? "아이디 *" : "이메일 *"}`}
           placeholder={
-            field === "id"
+            field === "username"
               ? "6~20자 이내로 입력해주세요."
               : "이메일을 입력해주세요."
           }

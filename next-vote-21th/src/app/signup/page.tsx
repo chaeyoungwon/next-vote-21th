@@ -37,10 +37,10 @@ const SignUpPage = () => {
   } = useTeamSelection();
 
   const [statuses, setStatuses] = useState<{
-    id: "error" | "success" | undefined;
+    username: "error" | "success" | undefined;
     email: "error" | "success" | undefined;
   }>({
-    id: undefined,
+    username: undefined,
     email: undefined,
   });
 
@@ -69,7 +69,7 @@ const SignUpPage = () => {
 
     const payload = {
       name: selectedMember,
-      username: form.id,
+      username: form.username,
       password: form.password,
       email: form.email,
       position: positionKey,
@@ -81,15 +81,18 @@ const SignUpPage = () => {
   };
 
   const hasEmpty =
-    !watch("id") ||
+    !watch("username") ||
     !watch("email") ||
     !watch("password") ||
     !watch("confirmPassword");
 
   const isSubmitDisabled =
-    hasEmpty || !positionKey || !selectedTeam || !selectedMember;
-  // statuses.id !== "success" ||
-  // statuses.email !== "success";
+    hasEmpty ||
+    !positionKey ||
+    !selectedTeam ||
+    !selectedMember ||
+    statuses.username !== "success" ||
+    statuses.email !== "success";
 
   return (
     <div className="scrollbar-hide flex min-h-screen w-screen flex-col items-center overflow-y-auto pt-[124px] pb-9 md:pt-[121px]">

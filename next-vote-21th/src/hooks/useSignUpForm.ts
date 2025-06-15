@@ -5,14 +5,14 @@ import { SignupInput, signupSchema } from "@/schemas/signupSchema";
 import { SignupErrors } from "@/types/auth/dto";
 
 const initialForm: SignupInput = {
-  id: "",
+  username: "",
   email: "",
   password: "",
   confirmPassword: "",
 };
 
 const initialErrors: SignupErrors = {
-  id: "",
+  username: "",
   email: "",
   password: "",
   confirmPassword: "",
