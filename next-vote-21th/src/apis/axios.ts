@@ -44,7 +44,6 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && !original._retry) {
       original._retry = true;
       await axiosInstance.post("/auth/tokens/refresh");
-      // Zustand에서 새 토큰 가져와서
       const newToken = useAuthStore.getState().accessToken;
       original.headers["Authorization"] = `Bearer ${newToken}`;
       return axiosInstance(original);

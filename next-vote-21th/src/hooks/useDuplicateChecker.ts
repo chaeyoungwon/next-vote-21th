@@ -33,9 +33,9 @@ export const useDuplicateChecker = <T extends FieldValues>({
       type === "username" ? checkUsernameDuplicate : checkEmailDuplicate;
 
     try {
-      const { isDuplicate, message } = await checkFn(value);
+      const { exists, message } = await checkFn(value);
 
-      if (isDuplicate) {
+      if (exists) {
         setError(type, { message });
         setStatuses(prev => ({ ...prev, [type]: "error" }));
       } else {
