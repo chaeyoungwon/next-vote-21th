@@ -36,6 +36,7 @@ export const checkEmailDuplicate = async (
       params: { email },
     });
     const isDup = res.data.data.exists === "true";
+
     return {
       exists: isDup,
       message: isDup

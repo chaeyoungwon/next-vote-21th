@@ -43,6 +43,13 @@ const SignUpPage = () => {
     username: undefined,
     email: undefined,
   });
+  const [successMsgs, setSuccessMsgs] = useState<{
+    username: string | undefined;
+    email: string | undefined;
+  }>({
+    username: undefined,
+    email: undefined,
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -55,13 +62,14 @@ const SignUpPage = () => {
     formState: { errors },
   } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const { check } = useDuplicateChecker<SignupForm>({
     setError,
     clearErrors,
     setStatuses,
+    setSuccessMsgs,
   });
 
   const onSubmit = async (form: SignupForm) => {
@@ -92,7 +100,9 @@ const SignUpPage = () => {
     !selectedTeam ||
     !selectedMember ||
     statuses.username !== "success" ||
-    statuses.email !== "success";
+    statuses.email !== "success" ||
+    !!errors.password ||
+    !!errors.confirmPassword;
 
   return (
     <div className="scrollbar-hide flex min-h-screen w-screen flex-col items-center overflow-y-auto pt-[124px] pb-9 md:pt-[121px]">
@@ -133,6 +143,9 @@ const SignUpPage = () => {
             errors={errors}
             watch={watch}
             statuses={statuses}
+            setStatuses={setStatuses}
+            successMsgs={successMsgs}
+            setSuccessMsgs={setSuccessMsgs}
             check={check}
           />
 

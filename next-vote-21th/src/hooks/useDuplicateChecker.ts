@@ -18,12 +18,19 @@ interface UseDuplicateCheckerProps<T extends FieldValues> {
   setStatuses: React.Dispatch<
     React.SetStateAction<{ username: Status; email: Status }>
   >;
+  setSuccessMsgs: React.Dispatch<
+    React.SetStateAction<{
+      username: string | undefined;
+      email: string | undefined;
+    }>
+  >;
 }
 
 export const useDuplicateChecker = <T extends FieldValues>({
   setError,
   clearErrors,
   setStatuses,
+  setSuccessMsgs,
 }: UseDuplicateCheckerProps<T>) => {
   const check = async (
     type: Path<T> & ("username" | "email"),
@@ -38,9 +45,11 @@ export const useDuplicateChecker = <T extends FieldValues>({
       if (exists) {
         setError(type, { message });
         setStatuses(prev => ({ ...prev, [type]: "error" }));
+        setSuccessMsgs(prev => ({ ...prev, [type]: undefined }));
       } else {
         clearErrors(type);
         setStatuses(prev => ({ ...prev, [type]: "success" }));
+        setSuccessMsgs(prev => ({ ...prev, [type]: message }));
       }
     } catch (err) {
       setError(type, {
