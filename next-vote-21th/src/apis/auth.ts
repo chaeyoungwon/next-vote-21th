@@ -1,7 +1,6 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import type { LoginPayload } from "@/types/auth/dto";
-import { SignupPayload } from "@/types/auth/dto";
+import type { LoginPayload, SignupPayload } from "@/types/auth/dto";
 
 import { axiosInstance } from "./axios";
 
