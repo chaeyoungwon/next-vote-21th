@@ -37,21 +37,23 @@ const LoginPage = () => {
           onSubmit={handleSubmit}
           className="flex w-full flex-col gap-[13px] md:gap-4.5"
         >
-          <InputField
-            label="아이디"
-            placeholder="아이디를 입력해주세요."
-            value={form.username}
-            onChange={e => handleInputFieldChange("username", e.target.value)}
-            autoComplete="username"
-          />
-          <InputField
-            label="비밀번호"
-            type="password"
-            placeholder="비밀번호를 입력해주세요."
-            value={form.password}
-            onChange={e => handleInputFieldChange("password", e.target.value)}
-            autoComplete="current-password"
-          />
+          <div className="flex flex-col gap-[13px] md:gap-[18px]">
+            <InputField
+              label="아이디"
+              placeholder="아이디를 입력해주세요."
+              value={form.username}
+              onChange={e => handleInputFieldChange("username", e.target.value)}
+              autoComplete="username"
+            />
+            <InputField
+              label="비밀번호"
+              type="password"
+              placeholder="비밀번호를 입력해주세요."
+              value={form.password}
+              onChange={e => handleInputFieldChange("password", e.target.value)}
+              autoComplete="current-password"
+            />
+          </div>
           <button
             type="submit"
             disabled={isLoginLoading}
