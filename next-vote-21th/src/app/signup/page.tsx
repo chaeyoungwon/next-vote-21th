@@ -18,7 +18,7 @@ import PartSelector from "@/components/signup/PartSelector";
 import SignupFormFields from "@/components/signup/SignUpFormFields";
 import TeamSelector from "@/components/signup/TeamSelector";
 
-import type { SignupForm } from "@/types/signup/dto";
+import type { SignupForm } from "@/types/auth/dto";
 
 const SignUpPage = () => {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-import type { SignupForm } from "@/types/signup/dto";
+import type { SignupForm } from "@/types/auth/dto";
 
 import InputField from "../common/InputField";
 
