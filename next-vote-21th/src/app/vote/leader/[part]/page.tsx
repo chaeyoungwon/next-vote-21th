@@ -37,6 +37,7 @@ const LeaderVotePage = () => {
   const handleVote = () => {
     if (!selectedCandidate) return;
     setIsModalOpen(true);
+    
   };
 
   return (
