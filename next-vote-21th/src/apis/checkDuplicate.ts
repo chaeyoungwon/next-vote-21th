@@ -12,7 +12,7 @@ export const checkUsernameDuplicate = async (
     const res = await axiosInstance.get("/auth/signup/username/exists", {
       params: { username },
     });
-    const isDup = res.data.data.exists === "true";
+    const isDup = res.data.data.exists;
     return {
       exists: isDup,
       message: isDup
@@ -35,7 +35,7 @@ export const checkEmailDuplicate = async (
     const res = await axiosInstance.get("/auth/signup/email/exists", {
       params: { email },
     });
-    const isDup = res.data.data.exists === "true";
+    const isDup = res.data.data.exists;
 
     return {
       exists: isDup,
