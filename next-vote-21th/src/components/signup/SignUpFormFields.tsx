@@ -40,8 +40,7 @@ const SignupFormFields = ({
       {(["username", "email"] as const).map(field => {
         const disable = !!errors[field] || !watch(field);
         const registered = register(field, {
-          onChange: e => {
-            const val = e.target.value;
+          onChange: () => {
             setStatuses(prev => ({ ...prev, [field]: undefined }));
             setSuccessMsgs(prev => ({ ...prev, [field]: undefined }));
           },

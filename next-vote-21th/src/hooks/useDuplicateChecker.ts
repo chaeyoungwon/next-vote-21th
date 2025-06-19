@@ -51,7 +51,7 @@ export const useDuplicateChecker = <T extends FieldValues>({
         setStatuses(prev => ({ ...prev, [type]: "success" }));
         setSuccessMsgs(prev => ({ ...prev, [type]: message }));
       }
-    } catch (err) {
+    } catch {
       setError(type, {
         message: "중복 확인 중 오류가 발생했습니다.",
       });
