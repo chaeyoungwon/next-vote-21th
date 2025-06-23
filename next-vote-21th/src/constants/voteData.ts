@@ -1,14 +1,14 @@
 export const voteData = {
   FE: [
-    { member: "원채영", vote: 3 },
-    { member: "신수진", vote: 2 },
-    { member: "최서연", vote: 2 },
-    { member: "한서정", vote: 2 },
-    { member: "김철흥", vote: 2 },
-    { member: "송아영", vote: 2 },
-    { member: "김영서", vote: 2 },
-    { member: "이주희", vote: 2 },
-    { member: "권동욱", vote: 2 },
+    { member: "원채영", vote: 10 },
+    { member: "신수진", vote: 8 },
+    { member: "최서연", vote: 5 },
+    { member: "한서정", vote: 6 },
+    { member: "김철흥", vote: 7 },
+    { member: "송아영", vote: 5 },
+    { member: "김영서", vote: 1 },
+    { member: "이주희", vote: 5 },
+    { member: "권동욱", vote: 6 },
     { member: "김서연", vote: 2 },
   ],
   BE: [
