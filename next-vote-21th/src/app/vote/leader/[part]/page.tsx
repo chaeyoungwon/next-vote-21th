@@ -10,7 +10,8 @@ import BackgroundShapes from "@/components/vote/BackgroundShape";
 
 import { MEMBER_MAP } from "@/constants/memberData";
 
-type Part = "frontend" | "backend";
+import { Part } from "@/types/part/part";
+
 
 const dataMap: Record<Part, Record<string, { college: string }>> = {
   frontend: MEMBER_MAP["Front-End"],
@@ -34,7 +35,6 @@ const LeaderVotePage = () => {
   );
   const [hasVoted, setHasVoted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   const handleVote = (candidate: string | null) => {
     if (!candidate) return;
