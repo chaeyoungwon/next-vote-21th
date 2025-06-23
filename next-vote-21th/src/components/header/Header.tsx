@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 
 import { useEffect, useRef, useState } from "react";
 
+import { useAuthStore } from "@/stores/useAuthStore";
+
 import LoginModal from "@/components/common/LoginModal";
 
 import HamburgerMenu from "@/public/svgs/header/hamburgerMenu.svg";
@@ -14,8 +16,8 @@ import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 
 const Header = () => {
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();

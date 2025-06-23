@@ -8,13 +8,13 @@ import { useState } from "react";
 import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
-import { BE, FE } from "@/constants/memberData";
+import { MEMBER_MAP } from "@/constants/memberData";
 
 type Part = "frontend" | "backend";
 
 const dataMap: Record<Part, Record<string, { college: string }>> = {
-  frontend: FE,
-  backend: BE,
+  frontend: MEMBER_MAP["Front-End"],
+  backend: MEMBER_MAP["Back-End"],
 };
 
 const titleMap: Record<Part, string> = {

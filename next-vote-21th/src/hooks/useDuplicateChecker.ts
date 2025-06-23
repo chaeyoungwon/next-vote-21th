@@ -1,32 +1,62 @@
 import {
+  FieldValues,
+  Path,
+  UseFormClearErrors,
+  UseFormSetError,
+} from "react-hook-form";
+
+import {
   checkEmailDuplicate,
   checkUsernameDuplicate,
 } from "@/apis/checkDuplicate";
 
-import { SignupErrors } from "@/types/signup/dto";
-
 type Status = "error" | "success" | undefined;
 
-export const useDuplicateChecker = (
-  setErrors: React.Dispatch<React.SetStateAction<SignupErrors>>,
+interface UseDuplicateCheckerProps<T extends FieldValues> {
+  setError: UseFormSetError<T>;
+  clearErrors: UseFormClearErrors<T>;
   setStatuses: React.Dispatch<
-    React.SetStateAction<{ id: Status; email: Status }>
-  >,
-) => {
-  const check = async (type: "id" | "email", value: string) => {
+    React.SetStateAction<{ username: Status; email: Status }>
+  >;
+  setSuccessMsgs: React.Dispatch<
+    React.SetStateAction<{
+      username: string | undefined;
+      email: string | undefined;
+    }>
+  >;
+}
+
+export const useDuplicateChecker = <T extends FieldValues>({
+  setError,
+  clearErrors,
+  setStatuses,
+  setSuccessMsgs,
+}: UseDuplicateCheckerProps<T>) => {
+  const check = async (
+    type: Path<T> & ("username" | "email"),
+    value: string,
+  ) => {
     const checkFn =
-      type === "id" ? checkUsernameDuplicate : checkEmailDuplicate;
-    const { isDuplicate, message } = await checkFn(value);
+      type === "username" ? checkUsernameDuplicate : checkEmailDuplicate;
 
-    setErrors(prev => ({
-      ...prev,
-      [type]: isDuplicate ? message : "",
-    }));
+    try {
+      const { exists, message } = await checkFn(value);
 
-    setStatuses(prev => ({
-      ...prev,
-      [type]: isDuplicate ? "error" : "success",
-    }));
+      if (exists) {
+        setError(type, { message });
+        setStatuses(prev => ({ ...prev, [type]: "error" }));
+        setSuccessMsgs(prev => ({ ...prev, [type]: undefined }));
+      } else {
+        clearErrors(type);
+        setStatuses(prev => ({ ...prev, [type]: "success" }));
+        setSuccessMsgs(prev => ({ ...prev, [type]: message }));
+      }
+    } catch {
+      setError(type, {
+        message: "중복 확인 중 오류가 발생했습니다.",
+      });
+      setStatuses(prev => ({ ...prev, [type]: "error" }));
+    }
   };
 
   return { check };

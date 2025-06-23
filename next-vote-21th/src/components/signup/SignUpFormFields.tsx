@@ -1,85 +1,79 @@
-"use client";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-import InputField from "@/components/common/InputField";
+import type { SignupForm } from "@/types/auth/dto";
 
-import type { SignupErrors, SignupForm } from "@/types/signup/dto";
+import InputField from "../common/InputField";
 
 interface SignupFormFieldsProps {
-  form: SignupForm;
-  errors: SignupErrors;
-  statuses: Record<"id" | "email", "error" | "success" | undefined>;
-  handleInputChange: (
-    key: keyof SignupForm,
-  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-  setForm: React.Dispatch<React.SetStateAction<SignupForm>>;
-  setErrors: React.Dispatch<React.SetStateAction<SignupErrors>>;
+  register: UseFormRegister<SignupForm>;
+  errors: FieldErrors<SignupForm>;
+  watch: (name: keyof SignupForm) => string;
+  statuses: Record<"username" | "email", "error" | "success" | undefined>;
+  successMsgs: Record<"username" | "email", string | undefined>;
   setStatuses: React.Dispatch<
-    React.SetStateAction<
-      Record<"id" | "email", "error" | "success" | undefined>
-    >
+    React.SetStateAction<{
+      username: "error" | "success" | undefined;
+      email: "error" | "success" | undefined;
+    }>
   >;
-  check: (
-    type: "id" | "email",
-    value: string,
-    setErrors: React.Dispatch<React.SetStateAction<SignupErrors>>,
-    setStatuses: React.Dispatch<
-      React.SetStateAction<
-        Record<"id" | "email", "error" | "success" | undefined>
-      >
-    >,
-  ) => void;
+  setSuccessMsgs: React.Dispatch<
+    React.SetStateAction<{
+      username: string | undefined;
+      email: string | undefined;
+    }>
+  >;
+  check: (type: "username" | "email", value: string) => void;
 }
 
 const SignupFormFields = ({
-  form,
+  register,
   errors,
+  watch,
   statuses,
-  handleInputChange,
-  setForm,
-  setErrors,
+  successMsgs,
   setStatuses,
+  setSuccessMsgs,
   check,
 }: SignupFormFieldsProps) => {
   return (
     <div className="mb-6 flex flex-col gap-[10px]">
-      <InputField
-        label="아이디 *"
-        placeholder="6~20자 이내로 입력해주세요."
-        value={form.id}
-        onChange={handleInputChange("id")}
-        onCheckDuplicate={() => check("id", form.id, setErrors, setStatuses)}
-        showCheckButton
-        error={errors.id}
-        status={statuses.id}
-      />
+      {(["username", "email"] as const).map(field => {
+        const disable = !!errors[field] || !watch(field);
+        const registered = register(field, {
+          onChange: () => {
+            setStatuses(prev => ({ ...prev, [field]: undefined }));
+            setSuccessMsgs(prev => ({ ...prev, [field]: undefined }));
+          },
+        });
 
-      <InputField
-        label="이메일 *"
-        placeholder="이메일을 입력해주세요."
-        value={form.email}
-        autoComplete="email"
-        onChange={handleInputChange("email")}
-        onCheckDuplicate={() =>
-          check("email", form.email, setErrors, setStatuses)
-        }
-        showCheckButton
-        error={errors.email}
-        status={statuses.email}
-      />
+        return (
+          <InputField
+            key={field}
+            label={`${field === "username" ? "아이디 *" : "이메일 *"}`}
+            placeholder={
+              field === "username"
+                ? "6~20자 이내로 입력해주세요."
+                : "이메일을 입력해주세요."
+            }
+            {...registered}
+            onCheckDuplicate={() => check(field, watch(field))}
+            showCheckButton
+            disabledCheckButton={disable}
+            error={errors[field]?.message as string | undefined}
+            successMsg={successMsgs[field]}
+            status={statuses[field]}
+            autoComplete={field === "email" ? "email" : undefined}
+          />
+        );
+      })}
 
       <InputField
         label="비밀번호 *"
         type="password"
         autoComplete="new-password"
         placeholder="문자, 숫자, 특수문자 포함 8~20자"
-        value={form.password}
-        onChange={e => {
-          setForm({ ...form, password: e.target.value });
-
-          if (errors.password)
-            setErrors((prev: SignupErrors) => ({ ...prev, password: "" }));
-        }}
-        error={errors.password}
+        {...register("password")}
+        error={errors.password?.message}
       />
 
       <InputField
@@ -87,17 +81,8 @@ const SignupFormFields = ({
         type="password"
         autoComplete="new-password"
         placeholder="비밀번호 재입력"
-        value={form.confirmPassword}
-        onChange={e => {
-          setForm({ ...form, confirmPassword: e.target.value });
-
-          if (errors.confirmPassword)
-            setErrors((prev: SignupErrors) => ({
-              ...prev,
-              confirmPassword: "",
-            }));
-        }}
-        error={errors.confirmPassword}
+        {...register("confirmPassword")}
+        error={errors.confirmPassword?.message}
       />
     </div>
   );
