@@ -20,7 +20,7 @@ const DemodayVoteResult = () => {
             className="md:justify-center gap-[13px] md:gap-[22px] flex items-center justify-start"
           >
             <div className="text-heading2 md:text-heading1 text-green-dark">{index + 1}</div>
-            <div className="bg-green-light border-green-dark text-body1-sb md:text-heading4 text-green-dark flex h-11 w-[261px] items-center justify-center md:gap-[7px] rounded-[24px] border">
+            <div className="bg-green-light border-green-dark text-body1-sb md:text-heading4 text-green-dark flex h-11 w-[261px] items-center justify-center gap-[7px] rounded-[24px] border">
               <div>{team.team}</div>
               <div>{team.vote}</div>
             </div>
