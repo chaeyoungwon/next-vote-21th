@@ -1,0 +1,33 @@
+export const voteData = {
+  FE: [
+    { member: "원채영", vote: 3 },
+    { member: "신수진", vote: 2 },
+    { member: "최서연", vote: 2 },
+    { member: "한서정", vote: 2 },
+    { member: "김철흥", vote: 2 },
+    { member: "송아영", vote: 2 },
+    { member: "김영서", vote: 2 },
+    { member: "이주희", vote: 2 },
+    { member: "권동욱", vote: 2 },
+    { member: "김서연", vote: 2 },
+  ],
+  BE: [
+    { member: "이석원", vote: 3 },
+    { member: "최근호", vote: 3 },
+    { member: "한혜수", vote: 3 },
+    { member: "박서연", vote: 3 },
+    { member: "박채연", vote: 3 },
+    { member: "김준형", vote: 3 },
+    { member: "임도현", vote: 3 },
+    { member: "박정하", vote: 3 },
+    { member: "서채연", vote: 3 },
+    { member: "오지현", vote: 3 },
+  ],
+  Demoday: [
+    { team: "하니홈", vote: 10 },
+    { team: "팝업사이트", vote: 8 },
+    { team: "프로메사", vote: 4 },
+    { team: "이어드림", vote: 3 },
+    { team: "인플루이", vote: 2 },
+  ],
+};
