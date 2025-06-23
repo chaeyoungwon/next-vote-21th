@@ -13,7 +13,7 @@ interface CommonModalProps {
   buttons: ButtonConfig[];
 }
 
-const CommonModal: React.FC<CommonModalProps> = ({ messageKey, buttons }) => {
+const CommonModal = ({ messageKey, buttons }: CommonModalProps) => {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60">
       <div className="flex h-[280px] w-[320px] flex-col overflow-hidden rounded-3xl bg-white md:h-[320px] md:w-[400px]">
