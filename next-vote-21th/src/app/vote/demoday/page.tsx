@@ -6,15 +6,14 @@ import { useEffect, useState } from "react";
 
 import clsx from "clsx";
 
-import { submitVote } from "@/apis/vote";
-import { getMyVote } from "@/apis/vote";
+import { getMyVote, submitVote } from "@/apis/vote";
 
 import { useLoginGuard } from "@/hooks/useAuthGuard";
 
 import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
-import { ELECTION_ID } from "@/constants/ElectionData";
+import { ELECTION_ID } from "@/constants/electionData";
 import { teamList } from "@/constants/teamLists";
 
 const DemodayVotePage = () => {

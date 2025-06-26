@@ -30,7 +30,7 @@ export const fetchSortedCandidates = async (electionId: number) => {
   return res.data.data;
 };
 
-// 투표 요청
+// 투표하기
 interface SubmitVoteParams {
   section: "DEMO_DAY" | "FRONT_KING" | "BACK_KING";
   selectedCandidateId: number;

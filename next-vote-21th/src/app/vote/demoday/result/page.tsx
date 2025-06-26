@@ -10,7 +10,7 @@ import { useLoginGuard } from "@/hooks/useAuthGuard";
 
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
-import { ELECTION_ID } from "@/constants/ElectionData";
+import { ELECTION_ID } from "@/constants/electionData";
 
 import { VoteItem } from "@/types/vote/vote";
 
