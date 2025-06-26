@@ -5,6 +5,7 @@ import "@/styles/globals.css";
 
 import ReactQueryProvider from "@/utils/reactQueryProvider";
 
+import ClientWrapper from "@/components/common/ClientWrapper";
 import Header from "@/components/header/Header";
 
 const suit = localFont({
@@ -40,10 +41,10 @@ export default function RootLayout({
     <html lang="ko" className={suit.className}>
       <body>
         <ReactQueryProvider>
-          <div className="flex h-screen w-screen">
+          <ClientWrapper>
             <Header />
             {children}
-          </div>
+          </ClientWrapper>
         </ReactQueryProvider>
       </body>
     </html>

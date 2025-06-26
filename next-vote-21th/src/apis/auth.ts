@@ -36,3 +36,17 @@ export const logout = async () => {
   await axiosInstance.post("/auth/logout");
   useAuthStore.getState().clearAuth();
 };
+
+export const refreshToken = async () => {
+  try {
+    const res = await axiosInstance.post("/auth/tokens/refresh");
+
+    const authHeader = res.headers["authorization"];
+    if (authHeader?.startsWith("Bearer ")) {
+      const newToken = authHeader.split(" ")[1];
+      useAuthStore.getState().setAccessToken(newToken);
+    }
+  } catch (err) {
+    console.error("accessToken 재발급 실패", err);
+  }
+};
