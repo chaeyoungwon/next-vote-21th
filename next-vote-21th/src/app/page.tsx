@@ -2,9 +2,13 @@
 
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
+
+import { useCountNum } from "@/hooks/useCountNum";
+
+import { getTotalVotes } from "@/utils/getTotalVotes";
 
 import LoginModal from "@/components/common/LoginModal";
 import BackgroundShapes from "@/components/home/BackgroundShape";
@@ -12,6 +16,7 @@ import VoteCategoryList from "@/components/home/VoteCategoryList";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [total, setTotal] = useState<number>(0);
 
   const { isLoggedIn } = useAuthStore();
   const router = useRouter();
@@ -23,6 +28,15 @@ const HomePage = () => {
       setIsModalOpen(true);
     }
   };
+
+  useEffect(() => {
+    const loadData = async () => {
+      const value = await getTotalVotes();
+      setTotal(value);
+    };
+    loadData();
+  }, []);
+
   return (
     <div className="scrollbar-hide relative min-h-screen w-screen overflow-x-hidden">
       <div className="flex h-screen flex-col items-center pt-16">
@@ -49,7 +63,7 @@ const HomePage = () => {
             투표하러 가기
           </button>
           <span className="text-body1-med text-violet-dark">
-            현재 총 20건의 투표가 진행되었어요!
+            현재 총 {useCountNum(total)}건의 투표가 진행되었어요!
           </span>
         </div>
       </div>

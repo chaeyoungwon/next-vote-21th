@@ -2,6 +2,11 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 import { axiosInstance } from "./axios";
 
+interface SubmitVoteParams {
+  section: "DEMO_DAY" | "FRONT_KING" | "BACK_KING";
+  selectedCandidateId: number;
+}
+
 // 선거 정보 조회
 export const fetchElectionInfo = async (sectionCode: string) => {
   const res = await axiosInstance.get("/elections", {
@@ -31,11 +36,6 @@ export const fetchSortedCandidates = async (electionId: number) => {
 };
 
 // 투표하기
-interface SubmitVoteParams {
-  section: "DEMO_DAY" | "FRONT_KING" | "BACK_KING";
-  selectedCandidateId: number;
-}
-
 export const submitVote = async ({
   section,
   selectedCandidateId,
