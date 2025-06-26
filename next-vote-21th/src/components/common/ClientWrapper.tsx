@@ -11,7 +11,9 @@ const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      await refreshToken();
+      const skipAutoLogin = localStorage.getItem("skipAutoLogin") === "true";
+      if (!skipAutoLogin) await refreshToken();
+
       setAuthChecked();
     };
     checkAuth();

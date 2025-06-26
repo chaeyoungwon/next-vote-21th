@@ -6,11 +6,14 @@ import { useState } from "react";
 
 import clsx from "clsx";
 
+import { useLoginGuard } from "@/hooks/useAuthGuard";
+
 import VoteModal from "@/components/common/VoteModal";
 
 import { teamList } from "@/constants/teamLists";
 
 const DemodayVotePage = () => {
+  useLoginGuard();
   const teamNames = teamList.map(team => team.name);
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

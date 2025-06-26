@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useGuestGuard } from "@/hooks/useAuthGuard";
 
 import InputField from "@/components/common/InputField";
 
 import type { LoginPayload } from "@/types/auth/dto";
 
 const LoginPage = () => {
+  useGuestGuard();
   const [form, setForm] = useState<LoginPayload>({
     username: "",
     password: "",

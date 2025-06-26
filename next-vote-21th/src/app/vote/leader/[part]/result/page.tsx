@@ -1,10 +1,13 @@
 import { use } from "react";
 
+import { useLoginGuard } from "@/hooks/useAuthGuard";
+
 interface PageProps {
   params: Promise<{ part: string }>;
 }
 
 const LeaderVoteResult = ({ params }: PageProps) => {
+  useLoginGuard();
   const { part } = use(params);
 
   return (

@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 
 import { useState } from "react";
 
+import { useLoginGuard } from "@/hooks/useAuthGuard";
+
 import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
@@ -23,6 +25,7 @@ const titleMap: Record<Part, string> = {
 };
 
 const LeaderVotePage = () => {
+  useLoginGuard();
   const params = useParams();
   const part = params.part as Part;
 

@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signup } from "@/apis/auth";
 
+import { useGuestGuard } from "@/hooks/useAuthGuard";
 import { useDuplicateChecker } from "@/hooks/useDuplicateChecker";
 import { useTeamSelection } from "@/hooks/useTeamSelection";
 
@@ -21,6 +22,7 @@ import TeamSelector from "@/components/signup/TeamSelector";
 import type { SignupForm } from "@/types/auth/dto";
 
 const SignUpPage = () => {
+  useGuestGuard();
   const router = useRouter();
 
   const {
