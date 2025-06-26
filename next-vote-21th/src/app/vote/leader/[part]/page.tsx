@@ -107,7 +107,7 @@ const LeaderVotePage = () => {
   }, [accessToken, part]);
 
   return (
-    <div className="relative flex min-h-screen w-screen flex-col items-center justify-center overflow-hidden">
+    <div className="relative flex min-h-screen w-screen flex-col items-center justify-center overflow-auto scrollbar-hide">
       <BackgroundShapes />
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-row justify-center gap-[47px] pb-7">

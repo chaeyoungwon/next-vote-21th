@@ -12,6 +12,7 @@ import { submitVote } from "@/apis/submitVote";
 import VoteModal from "@/components/common/VoteModal";
 
 import { teamList } from "@/constants/teamLists";
+import BackgroundShapes from "@/components/vote/BackgroundShape";
 
 const DemodayVotePage = () => {
   const accessToken = useAuthStore(state => state.accessToken);
@@ -81,7 +82,8 @@ const DemodayVotePage = () => {
   }, [accessToken]);
 
   return (
-    <div className="flex min-h-screen w-screen flex-col items-center pt-16">
+    <div className="relative flex min-h-screen w-screen flex-col items-center justify-center overflow-auto scrollbar-hide">
+      <BackgroundShapes />
       <div className="mt-[152px] flex flex-col">
         {/* 헤더 */}
         <div className="flex items-center justify-center">
