@@ -1,4 +1,14 @@
-export const MEMBER_MAP = {
+export type Member = {
+  college: string;
+  id: number;
+};
+
+export type MemberMap = {
+  "Front-End": Record<string, Member>;
+  "Back-End": Record<string, Member>;
+};
+
+export const MEMBER_MAP: MemberMap = {
   "Front-End": {
     원채영: { college: "Hongik Univ.", id: 1 },
     신수진: { college: "Hongik Univ.", id: 2 },
@@ -17,19 +27,10 @@ export const MEMBER_MAP = {
     박서연: { college: "Hongik Univ.", id: 13 },
     박채연: { college: "Hongik Univ.", id: 14 },
     김준형: { college: "Hongik Univ.", id: 15 },
-    임도현: { college: "Hongik Univ.", id: 16},
+    임도현: { college: "Hongik Univ.", id: 16 },
     박정하: { college: "Hongik Univ.", id: 17 },
     서채연: { college: "Hongik Univ.", id: 18 },
     오지현: { college: "Hongik Univ.", id: 19 },
     한혜수: { college: "Hongik Univ.", id: 20 },
   },
-} as const;
-
-export type Part = keyof typeof MEMBER_MAP;
-
-export type MemberData = {
-  [name: string]: {
-    college: string;
-    id: number;
-  };
 };
