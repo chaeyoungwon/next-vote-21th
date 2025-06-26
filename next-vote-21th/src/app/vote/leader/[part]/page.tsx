@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 import clsx from "clsx";
 
-import { submitVote } from "@/apis/submitVote";
+import { submitVote } from "@/apis/vote";
 import { fetchElectionInfo, getMyVote } from "@/apis/vote";
 
 import { useLoginGuard } from "@/hooks/useAuthGuard";

@@ -2,21 +2,22 @@
 
 import { useParams } from "next/navigation";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { fetchElectionInfo, fetchVoteResults, getMyVote } from "@/apis/vote";
+import { useAuthStore } from "@/stores/useAuthStore";
+
+import {
+  fetchElectionInfo,
+  fetchSortedCandidates,
+  getMyVote,
+} from "@/apis/vote";
 
 import { useLoginGuard } from "@/hooks/useAuthGuard";
 
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 import VoteResultItem from "@/components/vote/VoteResultItem";
 
-interface VoteCountItem {
-  electionId: number;
-  candidateName: string;
-  candidateId: number;
-  voteCount: number;
-}
+import { VoteItem } from "@/types/vote/vote";
 
 const partMap = {
   frontend: "FRONT_KING",
@@ -26,20 +27,23 @@ const partMap = {
 const LeaderVoteResult = () => {
   useLoginGuard();
 
+  const accessToken = useAuthStore(s => s.accessToken);
   const { part } = useParams() as { part: keyof typeof partMap };
   const sectionCode = partMap[part];
 
-  const [voteCounts, setVoteCounts] = useState<VoteCountItem[]>([]);
+  const [voteCounts, setVoteCounts] = useState<VoteItem[]>([]);
   const [myVoteId, setMyVoteId] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!accessToken) return;
+
     const loadVoteData = async () => {
       try {
         const electionInfo = await fetchElectionInfo(sectionCode);
         if (!electionInfo) return;
 
         const [votes, myVote] = await Promise.all([
-          fetchVoteResults(electionInfo.id),
+          fetchSortedCandidates(electionInfo.id),
           getMyVote(electionInfo.id),
         ]);
 
@@ -51,15 +55,10 @@ const LeaderVoteResult = () => {
     };
 
     loadVoteData();
-  }, [sectionCode]);
+  }, [sectionCode, accessToken]);
 
-  const sortedVotes = useMemo(
-    () => [...voteCounts].sort((a, b) => b.voteCount - a.voteCount),
-    [voteCounts],
-  );
-
-  const getPartLabel = (part: keyof typeof partMap) =>
-    part === "frontend" ? "프론트엔드" : "백엔드";
+  const getPartLabel = (p: keyof typeof partMap) =>
+    p === "frontend" ? "프론트엔드" : "백엔드";
 
   return (
     <div className="scrollbar-hide relative ml-[31px] flex min-h-screen w-screen flex-col justify-start overflow-auto pt-[128px] md:items-center md:justify-center">
@@ -68,14 +67,21 @@ const LeaderVoteResult = () => {
         현재 {getPartLabel(part)} 파트장 투표 순위
       </div>
       <div className="grid grid-cols-1 pt-[36px] md:grid-cols-3 md:pt-[56px]">
-        {sortedVotes.map((item, index) => (
-          <VoteResultItem
-            key={item.candidateId}
-            rank={index + 1}
-            candidate={item}
-            isMyVote={item.candidateId === myVoteId}
-          />
-        ))}
+        {voteCounts.map((item, index) => {
+          const mappedItem = {
+            ...item,
+            candidateName: item.name,
+          };
+
+          return (
+            <VoteResultItem
+              key={item.candidateId}
+              rank={index + 1}
+              candidate={mappedItem}
+              isMyVote={item.candidateId === myVoteId}
+            />
+          );
+        })}
       </div>
     </div>
   );

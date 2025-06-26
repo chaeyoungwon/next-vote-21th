@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchVoteResults, getMyVote } from "@/apis/vote";
+import { useAuthStore } from "@/stores/useAuthStore";
+
+import { fetchSortedCandidates, getMyVote } from "@/apis/vote";
 
 import { useLoginGuard } from "@/hooks/useAuthGuard";
 
@@ -10,35 +12,35 @@ import BackgroundShapes from "@/components/vote/BackgroundShape";
 
 import { ELECTION_ID } from "@/constants/ElectionData";
 
-type VoteResult = {
-  candidateId: number;
-  candidateName: string;
-  voteCount: number;
-};
+import { VoteItem } from "@/types/vote/vote";
 
 const DemodayVoteResult = () => {
   useLoginGuard();
 
   const [myVoteId, setMyVoteId] = useState<number | null>(null);
-  const [voteResults, setVoteResults] = useState<VoteResult[]>([]);
+  const [voteResults, setVoteResults] = useState<VoteItem[]>([]);
+
+  const accessToken = useAuthStore(s => s.accessToken);
 
   useEffect(() => {
+    if (!accessToken) return;
+
     const fetchVotes = async () => {
       try {
         const myVoteRes = await getMyVote(ELECTION_ID.DEMO_DAY);
-        setMyVoteId(myVoteRes.candidate.id);
+        setMyVoteId(myVoteRes?.candidate?.id ?? null);
 
-        const resultsRes = await fetchVoteResults(ELECTION_ID.DEMO_DAY);
-        setVoteResults(resultsRes.voteCounts);
-      } catch (error) {
-        console.error("투표 결과 불러오기 실패:", error);
+        const sortedCandidates = await fetchSortedCandidates(
+          ELECTION_ID.DEMO_DAY,
+        );
+        setVoteResults(sortedCandidates);
+      } catch (err) {
+        console.error("투표 결과 불러오기 실패:", err);
       }
     };
 
     fetchVotes();
-  }, []);
-
-  const sortedList = [...voteResults].sort((a, b) => b.voteCount - a.voteCount);
+  }, [accessToken]);
 
   return (
     <div className="scrollbar-hide relative ml-[31px] flex min-h-screen w-screen flex-col justify-start overflow-auto pt-[128px] md:items-center md:justify-center">
@@ -49,7 +51,7 @@ const DemodayVoteResult = () => {
       </div>
 
       <div className="flex flex-col gap-4 pt-[36px] md:pt-[56px]">
-        {sortedList.map((team, index) => {
+        {voteResults.map((team, index) => {
           const isMyVote = team.candidateId === myVoteId;
 
           const itemClass = `flex h-11 w-[261px] items-center justify-center gap-[7px] rounded-[24px] border border-green-dark text-body1-sb md:text-heading4 ${
@@ -65,7 +67,7 @@ const DemodayVoteResult = () => {
                 {index + 1}
               </div>
               <div className={itemClass}>
-                <div>{team.candidateName}</div>
+                <div>{team.name}</div>
                 <div>{team.voteCount}</div>
               </div>
             </div>
