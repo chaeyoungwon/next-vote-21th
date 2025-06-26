@@ -1,3 +1,5 @@
+export type Part = keyof typeof MEMBER_MAP;
+
 export type Member = {
   college: string;
   id: number;

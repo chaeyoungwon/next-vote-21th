@@ -15,5 +15,5 @@ export type SignupPayload = {
   password: string;
   email: string;
   position: "FRONTEND" | "BACKEND" | "DESIGN" | "PRODUCT_MANAGER";
-  team: "HANI_HOME" | "POP_UPCYCLE" | "DEAR_DREAM" | "PROMESA" | "INFLUY";
+  team: "HANI_HOME" | "LOOPZ" | "DEAR_DREAM" | "PROMESA" | "INFLUY";
 };

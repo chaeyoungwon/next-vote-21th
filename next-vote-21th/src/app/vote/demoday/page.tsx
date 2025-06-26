@@ -4,28 +4,26 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 
-import { useAuthStore } from "@/stores/useAuthStore";
 import clsx from "clsx";
 
 import { submitVote } from "@/apis/submitVote";
+import { getMyVote } from "@/apis/vote";
 
 import { useLoginGuard } from "@/hooks/useAuthGuard";
 
 import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
+import { ELECTION_ID } from "@/constants/ElectionData";
 import { teamList } from "@/constants/teamLists";
 
 const DemodayVotePage = () => {
   useLoginGuard();
 
-  const accessToken = useAuthStore(state => state.accessToken);
-  const teamNames = teamList.map(team => team.name);
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
 
-  // 투표 버튼 클릭
   const handleVote = async () => {
     if (!selectedTeam) return;
 
@@ -44,7 +42,6 @@ const DemodayVotePage = () => {
       setHasVoted(true);
       setIsModalOpen(false);
     } catch (error: any) {
-      console.error("투표 에러:", error);
       const message =
         error?.response?.data?.message || "투표 중 오류가 발생했습니다.";
       alert(message);
@@ -52,28 +49,14 @@ const DemodayVotePage = () => {
     }
   };
 
-  // 내 투표 정보 불러오기
   useEffect(() => {
     const fetchMyVote = async () => {
-      if (!accessToken) return;
-
       try {
-        const res = await fetch(
-          "https://hanihome-vote.shop/api/v1/elections/1/my-vote",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-        const data = await res.json();
-
-        if (data.data?.voted) {
+        const data = await getMyVote(ELECTION_ID.DEMO_DAY);
+        if (data?.voted) {
           setHasVoted(true);
-
-          const votedCandidateId = data.data.candidate.id;
           const votedTeam = teamList.find(
-            team => team.id === votedCandidateId,
+            team => team.id === data.candidate.id,
           )?.name;
           if (votedTeam) setSelectedTeam(votedTeam);
         }
@@ -83,7 +66,7 @@ const DemodayVotePage = () => {
     };
 
     fetchMyVote();
-  }, [accessToken]);
+  }, []);
 
   return (
     <div className="scrollbar-hide relative flex min-h-screen w-screen flex-col items-center justify-center overflow-auto">
@@ -114,40 +97,32 @@ const DemodayVotePage = () => {
 
         {/* 팀 리스트 */}
         <div className="flex flex-col gap-4">
-          {teamNames.map(team => {
-            const isSelected = selectedTeam === team;
-
-            const buttonClass = clsx(
-              "text-heading3 flex h-[44px] w-[261px] items-center justify-center rounded-3xl border md:h-[50px]",
-              "border-green-dark",
-              {
-                // 투표 후: 선택한 팀만 강조
-                "bg-green text-white cursor-default": hasVoted && isSelected,
-                "bg-green-light text-green-dark cursor-default":
-                  hasVoted && !isSelected,
-
-                // 투표 전
-                "bg-green text-white cursor-pointer": !hasVoted && isSelected,
-                "bg-green-light text-green-dark hover:bg-green hover:text-white cursor-pointer":
-                  !hasVoted && !isSelected,
-              },
-            );
+          {teamList.map(({ name }) => {
+            const isSelected = selectedTeam === name;
+            const baseStyle =
+              "text-heading3 flex h-[44px] w-[261px] items-center justify-center rounded-3xl border md:h-[50px] border-green-dark";
+            const buttonStyle = clsx(baseStyle, {
+              "bg-green text-white cursor-default": hasVoted && isSelected,
+              "bg-green-light text-green-dark cursor-default":
+                hasVoted && !isSelected,
+              "bg-green text-white cursor-pointer": !hasVoted && isSelected,
+              "bg-green-light text-green-dark hover:bg-green hover:text-white cursor-pointer":
+                !hasVoted && !isSelected,
+            });
 
             return (
               <div
-                key={team}
-                onClick={() => {
-                  if (!hasVoted) setSelectedTeam(team);
-                }}
-                className={buttonClass}
+                key={name}
+                onClick={() => !hasVoted && setSelectedTeam(name)}
+                className={buttonStyle}
               >
-                {team}
+                {name}
               </div>
             );
           })}
         </div>
 
-        {/* 결과 페이지 이동 */}
+        {/* 결과 페이지 링크 */}
         <Link
           className="text-heading2 text-green-dark flex self-end pt-[45px]"
           href={`/vote/demoday/result`}

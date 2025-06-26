@@ -2,50 +2,41 @@
 
 import { useEffect, useState } from "react";
 
-import { useAuthStore } from "@/stores/useAuthStore";
+import { fetchVoteResults, getMyVote } from "@/apis/vote";
 
 import { useLoginGuard } from "@/hooks/useAuthGuard";
 
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
+import { ELECTION_ID } from "@/constants/ElectionData";
+
+type VoteResult = {
+  candidateId: number;
+  candidateName: string;
+  voteCount: number;
+};
+
 const DemodayVoteResult = () => {
   useLoginGuard();
 
-  const accessToken = useAuthStore(state => state.accessToken);
   const [myVoteId, setMyVoteId] = useState<number | null>(null);
   const [voteResults, setVoteResults] = useState<VoteResult[]>([]);
 
-  type VoteResult = {
-    candidateId: number;
-    candidateName: string;
-    voteCount: number;
-  };
   useEffect(() => {
     const fetchVotes = async () => {
-      const myVoteRes = await fetch(
-        "https://hanihome-vote.shop/api/v1/elections/1/my-vote",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      const myVoteData = await myVoteRes.json();
-      setMyVoteId(myVoteData.data.candidate.id);
+      try {
+        const myVoteRes = await getMyVote(ELECTION_ID.DEMO_DAY);
+        setMyVoteId(myVoteRes.candidate.id);
 
-      const resultsRes = await fetch(
-        "https://hanihome-vote.shop/api/v1/elections/1/results",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      const resultsData = await resultsRes.json();
-      setVoteResults(resultsData.data.voteCounts);
+        const resultsRes = await fetchVoteResults(ELECTION_ID.DEMO_DAY);
+        setVoteResults(resultsRes.voteCounts);
+      } catch (error) {
+        console.error("투표 결과 불러오기 실패:", error);
+      }
     };
+
     fetchVotes();
-  }, [accessToken]);
+  }, []);
 
   const sortedList = [...voteResults].sort((a, b) => b.voteCount - a.voteCount);
 
@@ -60,6 +51,11 @@ const DemodayVoteResult = () => {
       <div className="flex flex-col gap-4 pt-[36px] md:pt-[56px]">
         {sortedList.map((team, index) => {
           const isMyVote = team.candidateId === myVoteId;
+
+          const itemClass = `flex h-11 w-[261px] items-center justify-center gap-[7px] rounded-[24px] border border-green-dark text-body1-sb md:text-heading4 ${
+            isMyVote ? "bg-green text-white" : "bg-green-light text-green-dark"
+          }`;
+
           return (
             <div
               key={team.candidateId}
@@ -68,9 +64,7 @@ const DemodayVoteResult = () => {
               <div className="text-heading2 md:text-heading1 text-green-dark">
                 {index + 1}
               </div>
-              <div
-                className={`border-green-dark text-body1-sb md:text-heading4 flex h-11 w-[261px] items-center justify-center gap-[7px] rounded-[24px] border ${isMyVote ? "bg-green text-white" : "bg-green-light text-green-dark"}`}
-              >
+              <div className={itemClass}>
                 <div>{team.candidateName}</div>
                 <div>{team.voteCount}</div>
               </div>
