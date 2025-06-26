@@ -12,9 +12,8 @@ export const useAuthStore = create<AuthStore>(set => ({
   accessToken: "",
   isLoggedIn: false,
 
-  setAccessToken: token =>
-    set(prev => ({
-      ...prev,
+  setAccessToken: (token) =>
+    set(() => ({
       accessToken: token,
       isLoggedIn: true,
     })),
