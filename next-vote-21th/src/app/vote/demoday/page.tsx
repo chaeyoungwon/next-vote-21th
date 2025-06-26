@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useState } from "react";
 
+import { submitVote } from "@/apis/submitVote";
 import clsx from "clsx";
 
 import VoteModal from "@/components/common/VoteModal";
@@ -16,12 +17,27 @@ const DemodayVotePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
 
-  const handleVote = (team: string | null) => {
-    if (!team) return;
-    // TODO: 여기에 투표 처리 로직 (API 호출 등) 작성
-    console.log(`${team} 팀에 투표 완료`);
-    setHasVoted(true);
-    setIsModalOpen(false);
+  const handleVote = async () => {
+    if (!selectedTeam) return;
+
+    const team = teamList.find(t => t.name === selectedTeam);
+    if (!team) {
+      alert("선택한 팀 정보를 찾을 수 없습니다.");
+      return;
+    }
+
+    try {
+      await submitVote({
+        section: "DEMO_DAY",
+        selectedCandidateId: team.id,
+      });
+      alert(`${selectedTeam} 팀에 투표 완료`);
+      setHasVoted(true);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("투표 에러:", error);
+      alert("투표에 실패했습니다.");
+    }
   };
 
   return (
@@ -83,7 +99,7 @@ const DemodayVotePage = () => {
             target={selectedTeam}
             targetType="팀"
             onClose={() => setIsModalOpen(false)}
-            onConfirm={() => handleVote(selectedTeam)}
+            onConfirm={handleVote}
           />
         )}
       </div>

@@ -5,13 +5,16 @@ import { useParams } from "next/navigation";
 
 import { useState } from "react";
 
+import { submitVote } from "@/apis/submitVote";
+
+import { getCandidateIdByName } from "@/utils/getCandidateIdByName";
+
 import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
 import { MEMBER_MAP } from "@/constants/memberData";
 
 import { Part } from "@/types/part/part";
-
 
 const dataMap: Record<Part, Record<string, { college: string }>> = {
   frontend: MEMBER_MAP["Front-End"],
@@ -36,8 +39,21 @@ const LeaderVotePage = () => {
   const [hasVoted, setHasVoted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleVote = (candidate: string | null) => {
+  const handleVote = async (candidate: string | null) => {
     if (!candidate) return;
+    const candidateId = getCandidateIdByName(candidate);
+    if (!candidateId) {
+      alert("후보 ID를 찾을 수 없습니다.");
+      return;
+    }
+
+    const section = part === "frontend" ? "FRONT_KING" : "BACK_KING";
+
+    await submitVote({
+      section,
+      selectedCandidateId: candidateId,
+    });
+
     setHasVoted(true);
     setIsModalOpen(false);
   };
@@ -98,7 +114,6 @@ const LeaderVotePage = () => {
           targetType="파트장"
           onConfirm={() => {
             handleVote(selectedCandidate);
-            // TODO: 실제 투표 API 호출 예정
           }}
           onClose={() => setIsModalOpen(false)}
         />
