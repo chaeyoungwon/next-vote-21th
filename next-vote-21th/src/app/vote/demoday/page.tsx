@@ -9,12 +9,16 @@ import clsx from "clsx";
 
 import { submitVote } from "@/apis/submitVote";
 
-import VoteModal from "@/components/common/VoteModal";
+import { useLoginGuard } from "@/hooks/useAuthGuard";
 
-import { teamList } from "@/constants/teamLists";
+import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
+import { teamList } from "@/constants/teamLists";
+
 const DemodayVotePage = () => {
+  useLoginGuard();
+
   const accessToken = useAuthStore(state => state.accessToken);
   const teamNames = teamList.map(team => team.name);
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
@@ -82,7 +86,7 @@ const DemodayVotePage = () => {
   }, [accessToken]);
 
   return (
-    <div className="relative flex min-h-screen w-screen flex-col items-center justify-center overflow-auto scrollbar-hide">
+    <div className="scrollbar-hide relative flex min-h-screen w-screen flex-col items-center justify-center overflow-auto">
       <BackgroundShapes />
       <div className="mt-[152px] flex flex-col">
         {/* 헤더 */}

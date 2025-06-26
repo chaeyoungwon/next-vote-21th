@@ -1,6 +1,8 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
 
+const NON_AUTH_URLS = ["/auth/signin", "/auth/signup", "/auth/tokens/refresh"];
+
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   headers: {
@@ -13,10 +15,9 @@ export const axiosInstance = axios.create({
 // 요청 인터셉터: accessToken을 Zustand에서 가져와 주입
 axiosInstance.interceptors.request.use(
   config => {
-    const isAuthRequest =
-      config.url?.includes("/auth/signin") ||
-      config.url?.includes("/auth/tokens/refresh");
-
+    const isAuthRequest = NON_AUTH_URLS.some(path =>
+      config.url?.includes(path),
+    );
     if (!isAuthRequest) {
       const token = useAuthStore.getState().accessToken;
       if (token) {
@@ -39,15 +40,7 @@ axiosInstance.interceptors.response.use(
     }
     return response;
   },
-  async error => {
-    const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
-      original._retry = true;
-      await axiosInstance.post("/auth/tokens/refresh");
-      const newToken = useAuthStore.getState().accessToken;
-      original.headers["Authorization"] = `Bearer ${newToken}`;
-      return axiosInstance(original);
-    }
+  error => {
     return Promise.reject(error);
   },
 );

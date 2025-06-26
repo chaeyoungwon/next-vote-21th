@@ -28,7 +28,6 @@ const DesktopMenu = ({ isLoggedIn, onLoginRequired }: DesktopMenuProps) => {
             return;
           }
 
-          // 사용자 정의 동작이 있다면 실행
           onClick?.();
         };
 

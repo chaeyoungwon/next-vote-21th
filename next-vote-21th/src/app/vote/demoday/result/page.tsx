@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
+import { useLoginGuard } from "@/hooks/useAuthGuard";
+
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
 const DemodayVoteResult = () => {
+  useLoginGuard();
+
   const accessToken = useAuthStore(state => state.accessToken);
   const [myVoteId, setMyVoteId] = useState<number | null>(null);
   const [voteResults, setVoteResults] = useState<VoteResult[]>([]);

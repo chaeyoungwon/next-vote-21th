@@ -12,6 +12,8 @@ import { submitVote } from "@/apis/submitVote";
 
 import { getCandidateIdByName } from "@/utils/getCandidateIdByName";
 
+import { useLoginGuard } from "@/hooks/useAuthGuard";
+
 import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
@@ -30,6 +32,7 @@ const titleMap: Record<Part, string> = {
 };
 
 const LeaderVotePage = () => {
+  useLoginGuard();
   const params = useParams();
   const part = params.part as Part;
   const accessToken = useAuthStore(state => state.accessToken);

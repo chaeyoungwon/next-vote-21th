@@ -6,6 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
+import { useLoginGuard } from "@/hooks/useAuthGuard";
+
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
 interface VoteCountItem {
@@ -21,6 +23,8 @@ const partMap = {
 } as const;
 
 const LeaderVoteResult = () => {
+  useLoginGuard();
+
   const params = useParams();
   const part = params.part as keyof typeof partMap;
   const sectionCode = partMap[part];
@@ -33,7 +37,7 @@ const LeaderVoteResult = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!accessToken) return;
-  
+
       try {
         const electionRes = await fetch(
           `https://hanihome-vote.shop/api/v1/elections?section=${sectionCode}`,
@@ -45,7 +49,7 @@ const LeaderVoteResult = () => {
         const electionInfo = electionData.data?.[0];
         if (!electionInfo) return;
         const electionId = electionInfo.id;
-  
+
         const resultsRes = await fetch(
           `https://hanihome-vote.shop/api/v1/elections/${electionId}/results`,
           {
@@ -53,10 +57,10 @@ const LeaderVoteResult = () => {
           },
         );
         const resultsData = await resultsRes.json();
-  
+
         const voteCountsData = resultsData.data?.voteCounts || [];
         setVoteCounts(voteCountsData);
-  
+
         // 내 투표 정보 조회
         const myVoteRes = await fetch(
           `https://hanihome-vote.shop/api/v1/elections/${electionId}/my-vote`,
@@ -65,7 +69,7 @@ const LeaderVoteResult = () => {
           },
         );
         const myVoteData = await myVoteRes.json();
-  
+
         if (myVoteData?.data?.voted) {
           setMyVoteId(myVoteData.data.candidate.id);
         }
@@ -73,7 +77,7 @@ const LeaderVoteResult = () => {
         console.error("투표 정보 불러오기 실패:", error);
       }
     };
-  
+
     fetchData();
   }, [accessToken, sectionCode]);
 
