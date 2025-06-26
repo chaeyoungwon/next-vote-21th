@@ -10,8 +10,6 @@ export const submitVote = async ({
   selectedCandidateId: number;
 }) => {
   const { accessToken } = useAuthStore.getState();
-  // console.log("토큰:", accessToken);
-  // console.log("후보 ID:", selectedCandidateId);
   if (accessToken === null) {
     alert("로그인이 필요합니다.");
     return;
@@ -20,22 +18,25 @@ export const submitVote = async ({
   try {
     // 1. 해당 섹션의 electionId 조회
     const electionRes = await axiosInstance.get(
-      `/api/v1/elections?section=${section}`,
+      `/elections?section=${section}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       },
     );
-
-    const electionId = electionRes.data[0]?.id;
+    console.log("electionRes:", electionRes.data);
+    const electionId = electionRes.data.data[0]?.id;
     if (!electionId) {
       throw new Error("선거 정보를 불러올 수 없습니다.");
     }
-
+    console.log("POST body:", {
+      electionId: electionId,
+      candidateId: selectedCandidateId,
+    });
     // 2. 투표 요청
     const voteRes = await axiosInstance.post(
-      `/api/v1/elections/${electionId}/votes`,
+      `/elections/${electionId}/votes`,
       {
         electionId,
         candidateId: selectedCandidateId,
@@ -46,11 +47,8 @@ export const submitVote = async ({
         },
       },
     );
-
-    console.log("투표 성공:", voteRes.data);
-    alert("투표가 완료되었습니다!");
-  } catch (err) {
+  } catch (err: any) {
     console.error("투표 실패:", err);
-    alert("투표 요청에 실패했습니다.");
+    throw err;
   }
 };

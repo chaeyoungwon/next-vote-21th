@@ -2,21 +2,25 @@
 
 import Link from "next/link";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { useAuthStore } from "@/stores/useAuthStore";
+import clsx from "clsx";
 
 import { submitVote } from "@/apis/submitVote";
-import clsx from "clsx";
 
 import VoteModal from "@/components/common/VoteModal";
 
 import { teamList } from "@/constants/teamLists";
 
 const DemodayVotePage = () => {
+  const accessToken = useAuthStore(state => state.accessToken);
   const teamNames = teamList.map(team => team.name);
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
 
+  // 투표 버튼 클릭
   const handleVote = async () => {
     if (!selectedTeam) return;
 
@@ -34,11 +38,47 @@ const DemodayVotePage = () => {
       alert(`${selectedTeam} 팀에 투표 완료`);
       setHasVoted(true);
       setIsModalOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("투표 에러:", error);
-      alert("투표에 실패했습니다.");
+      const message =
+        error?.response?.data?.message || "투표 중 오류가 발생했습니다.";
+      alert(message);
+      setIsModalOpen(false);
     }
   };
+
+  // 내 투표 정보 불러오기
+  useEffect(() => {
+    const fetchMyVote = async () => {
+      if (!accessToken) return;
+
+      try {
+        const res = await fetch(
+          "https://hanihome-vote.shop/api/v1/elections/1/my-vote",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
+        );
+        const data = await res.json();
+
+        if (data.data?.voted) {
+          setHasVoted(true);
+
+          const votedCandidateId = data.data.candidate.id;
+          const votedTeam = teamList.find(
+            team => team.id === votedCandidateId,
+          )?.name;
+          if (votedTeam) setSelectedTeam(votedTeam);
+        }
+      } catch (error) {
+        console.error("내 투표 조회 실패:", error);
+      }
+    };
+
+    fetchMyVote();
+  }, [accessToken]);
 
   return (
     <div className="flex min-h-screen w-screen flex-col items-center pt-16">
@@ -53,7 +93,7 @@ const DemodayVotePage = () => {
               onClick={() => !hasVoted && setIsModalOpen(true)}
               disabled={!selectedTeam || hasVoted}
               className={clsx(
-                "text-lab1-b md:text-body1-sb cursor-pointer underline transition-opacity duration-200",
+                "text-lab1-b md:text-body1-sb underline transition-opacity duration-200",
                 hasVoted
                   ? "pointer-events-none opacity-0"
                   : selectedTeam
@@ -68,25 +108,40 @@ const DemodayVotePage = () => {
 
         {/* 팀 리스트 */}
         <div className="flex flex-col gap-4">
-          {teamNames.map(team => (
-            <div
-              key={team}
-              onClick={() => {
-                setSelectedTeam(team);
-              }}
-              className={clsx(
-                "text-heading3 flex h-[44px] w-[261px] cursor-pointer items-center justify-center rounded-3xl border md:h-[50px]",
-                "border-green-dark",
-                selectedTeam === team
-                  ? "bg-green text-white"
-                  : "bg-green-light text-green-dark hover:bg-green hover:text-white",
-              )}
-            >
-              {team}
-            </div>
-          ))}
+          {teamNames.map(team => {
+            const isSelected = selectedTeam === team;
+
+            const buttonClass = clsx(
+              "text-heading3 flex h-[44px] w-[261px] items-center justify-center rounded-3xl border md:h-[50px]",
+              "border-green-dark",
+              {
+                // 투표 후: 선택한 팀만 강조
+                "bg-green text-white cursor-default": hasVoted && isSelected,
+                "bg-green-light text-green-dark cursor-default":
+                  hasVoted && !isSelected,
+
+                // 투표 전
+                "bg-green text-white cursor-pointer": !hasVoted && isSelected,
+                "bg-green-light text-green-dark hover:bg-green hover:text-white cursor-pointer":
+                  !hasVoted && !isSelected,
+              },
+            );
+
+            return (
+              <div
+                key={team}
+                onClick={() => {
+                  if (!hasVoted) setSelectedTeam(team);
+                }}
+                className={buttonClass}
+              >
+                {team}
+              </div>
+            );
+          })}
         </div>
 
+        {/* 결과 페이지 이동 */}
         <Link
           className="text-heading2 text-green-dark flex self-end pt-[45px]"
           href={`/vote/demoday/result`}
@@ -94,6 +149,7 @@ const DemodayVotePage = () => {
           현재 투표 순위 보러 가기 &gt;
         </Link>
 
+        {/* 모달 */}
         {isModalOpen && selectedTeam && (
           <VoteModal
             target={selectedTeam}
