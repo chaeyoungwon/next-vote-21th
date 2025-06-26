@@ -20,9 +20,15 @@ const CommonModal = ({ messageKey, buttons }: CommonModalProps) => {
         {/* 모달 본문 */}
         <div className="text-heading2 flex h-[217px] w-full flex-col items-center justify-center text-center md:h-[257px]">
           <div className="flex flex-col items-center justify-center gap-2">
-            {modalData[messageKey].split("<br />").map((line, index) => (
-              <span key={index}>{line}</span>
-            ))}
+            {modalData[messageKey].map((line, idx) =>
+              line.trim() === "" ? (
+                <br key={idx} />
+              ) : (
+                <p key={idx} className="text-body text-center text-gray-800">
+                  {line}
+                </p>
+              ),
+            )}
           </div>
         </div>
 

@@ -25,7 +25,7 @@ export const voteData = {
   ],
   Demoday: [
     { team: "하니홈", vote: 10 },
-    { team: "팝업사이트", vote: 8 },
+    { team: "룹즈", vote: 8 },
     { team: "프로메사", vote: 4 },
     { team: "이어드림", vote: 2 },
     { team: "인플루이", vote: 3 },

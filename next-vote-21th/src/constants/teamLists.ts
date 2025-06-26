@@ -1,7 +1,7 @@
 export const teamList = [
   {
     code: "HANI_HOME",
-    id: 1,
+    id: 2,
     name: "하니홈",
     members: {
       FRONTEND: ["신수진", "원채영"],
@@ -10,7 +10,7 @@ export const teamList = [
   },
   {
     code: "INFLUY",
-    id: 2,
+    id: 5,
     name: "인플루이",
     members: {
       FRONTEND: ["최서연", "한서정"],
@@ -28,7 +28,7 @@ export const teamList = [
   },
   {
     code: "LOOPZ",
-    id: 4,
+    id: 1,
     name: "룹즈",
     members: {
       FRONTEND: ["김철흥", "송아영"],
@@ -37,7 +37,7 @@ export const teamList = [
   },
   {
     code: "PROMESA",
-    id: 5,
+    id: 4,
     name: "프로메사",
     members: {
       FRONTEND: ["권동욱", "김서연"],
