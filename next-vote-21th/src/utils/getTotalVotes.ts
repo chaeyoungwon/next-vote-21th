@@ -1,6 +1,6 @@
 import { fetchVoteResults } from "@/apis/vote";
 
-import { ELECTION_ID } from "@/constants/electionData";
+import { ELECTION_ID } from "@/constants/electionIds";
 
 export const getTotalVotes = async (): Promise<number> => {
   const voteCountsArray = await Promise.all(

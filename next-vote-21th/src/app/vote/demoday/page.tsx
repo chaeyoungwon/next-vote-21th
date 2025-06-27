@@ -13,7 +13,7 @@ import { useLoginGuard } from "@/hooks/useAuthGuard";
 import VoteModal from "@/components/common/VoteModal";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 
-import { ELECTION_ID } from "@/constants/electionData";
+import { ELECTION_ID } from "@/constants/electionIds";
 import { teamList } from "@/constants/teamLists";
 
 const DemodayVotePage = () => {
