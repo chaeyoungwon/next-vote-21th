@@ -38,8 +38,8 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="scrollbar-hide relative min-h-screen w-screen overflow-x-hidden">
-      <div className="flex h-screen flex-col items-center pt-16">
+    <div className="scrollbar-hide relative min-h-screen w-screen overflow-x-hidden overflow-y-auto">
+      <div className="flex h-full flex-col items-center py-16">
         <BackgroundShapes />
 
         {/* 타이틀 */}

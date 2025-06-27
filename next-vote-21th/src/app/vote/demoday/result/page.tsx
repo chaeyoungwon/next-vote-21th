@@ -43,14 +43,14 @@ const DemodayVoteResult = () => {
   }, [accessToken]);
 
   return (
-    <div className="scrollbar-hide relative ml-[31px] flex min-h-screen w-screen flex-col justify-start overflow-auto pt-[128px] md:items-center md:justify-center">
+    <div className="scrollbar-hide relative flex min-h-screen w-screen flex-col justify-center overflow-x-hidden overflow-y-auto md:items-center md:justify-center">
       <BackgroundShapes />
 
-      <div className="text-heading3 md:text-heading1 text-green-dark">
+      <div className="text-heading3 md:text-heading1 text-green-dark min-w-[290px] self-center">
         현재 데모데이 투표 순위
       </div>
 
-      <div className="flex flex-col gap-4 pt-[36px] md:pt-[56px]">
+      <div className="flex flex-col items-center gap-4 pt-[36px] md:pt-[56px]">
         {voteResults.map((team, index) => {
           const isMyVote = team.candidateId === myVoteId;
 

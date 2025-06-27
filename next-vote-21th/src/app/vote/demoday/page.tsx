@@ -76,9 +76,9 @@ const DemodayVotePage = () => {
   }, []);
 
   return (
-    <div className="scrollbar-hide relative flex min-h-screen w-screen flex-col items-center justify-center overflow-auto">
+    <div className="scrollbar-hide relative flex min-h-screen w-screen flex-col items-center justify-center overflow-x-hidden overflow-y-auto">
       <BackgroundShapes />
-      <div className="mt-[152px] flex flex-col">
+      <div className="flex flex-col">
         {/* 헤더 */}
         <div className="flex items-center justify-center">
           <div className="mb-7 ml-[-26px] flex items-center justify-center gap-9 text-center md:ml-[-52px]">
