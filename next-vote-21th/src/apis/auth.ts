@@ -11,9 +11,11 @@ export const login = async (
   try {
     const res = await axiosInstance.post("/auth/signin", payload);
     const accessToken = res.headers["authorization"]?.split(" ")[1];
+
     if (!accessToken) {
       return { token: null, errorMessage: "로그인에 실패하였습니다." };
     }
+    useAuthStore.getState().setAccessToken(accessToken);
     localStorage.removeItem("skipAutoLogin");
 
     return { token: accessToken, errorMessage: "" };

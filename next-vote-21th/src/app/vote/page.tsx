@@ -7,13 +7,13 @@ import { useLoginGuard } from "@/hooks/useAuthGuard";
 import BackgroundShapes from "@/components/vote/BackgroundShape";
 import VoteButton from "@/components/vote/VoteButton";
 
-type Part = "frontend" | "backend" | "demoday";
+import { ElectionType } from "@/types/part/part";
 
 const VotePage = () => {
   useLoginGuard();
   const router = useRouter();
 
-  const handleClick = (part: Part) => {
+  const handleClick = (part: ElectionType) => {
     if (part === "demoday") {
       router.push(`vote/demoday`);
     } else {
