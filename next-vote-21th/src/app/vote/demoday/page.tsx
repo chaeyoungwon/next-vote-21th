@@ -41,11 +41,17 @@ const DemodayVotePage = () => {
       setHasVoted(true);
       setIsModalOpen(false);
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert(error.message || "투표 중 오류가 발생했습니다.");
-      } else {
-        alert("투표 중 알 수 없는 오류가 발생했습니다.");
+      let message = "투표 중 오류가 발생했습니다.";
+
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const res = (error as { response: { data?: { message?: string } } })
+          .response;
+        if (res.data?.message) {
+          message = res.data.message;
+        }
       }
+
+      alert(message);
       setIsModalOpen(false);
     }
   };
