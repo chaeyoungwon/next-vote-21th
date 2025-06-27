@@ -67,9 +67,12 @@ const LeaderVotePage = () => {
       });
       setHasVoted(true);
       setIsModalOpen(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const message =
-        error?.response?.data?.message || "투표 중 오류가 발생했습니다.";
+        error instanceof Error && "message" in error
+          ? error.message
+          : "투표 중 오류가 발생했습니다.";
+
       alert(message);
       setIsModalOpen(false);
     }

@@ -40,10 +40,12 @@ const DemodayVotePage = () => {
       alert(`${selectedTeam} 팀에 투표 완료`);
       setHasVoted(true);
       setIsModalOpen(false);
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || "투표 중 오류가 발생했습니다.";
-      alert(message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message || "투표 중 오류가 발생했습니다.");
+      } else {
+        alert("투표 중 알 수 없는 오류가 발생했습니다.");
+      }
       setIsModalOpen(false);
     }
   };
