@@ -56,6 +56,7 @@ export const submitVote = async ({
       params: { section },
       headers,
     });
+    console.log(electionData);
 
     const electionId = electionData.data?.[0]?.id;
     if (!electionId) {
@@ -70,6 +71,8 @@ export const submitVote = async ({
       },
       { headers },
     );
+
+    console.log(electionData);
   } catch (error) {
     console.error("❌ 투표 실패:", error);
     throw error;
